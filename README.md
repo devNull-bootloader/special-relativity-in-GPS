@@ -1,1 +1,1 @@
-# special-relativity-in-GPS
+Why GPS needs Einstein: deriving relativistic clock corrections (SR + GR) from first principles and comparing across GPS, Galileo, GLONASS, and BeiDou. Includes null-altitude derivation and position-error animation.
