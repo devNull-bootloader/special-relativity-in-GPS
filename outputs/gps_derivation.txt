@@ -1,0 +1,90 @@
+
+================================================================================
+GPS RELATIVISTIC CLOCK CORRECTION — STEP-BY-STEP DERIVATION
+================================================================================
+
+INPUT PARAMETERS
+================================================================================
+Orbital altitude:                   20,200 km
+Orbital radius (from Earth center): 2.657e+07 m
+Earth radius (R_E):                 6.371e+06 m
+Gravitational parameter (GM):       3.986e+14 m³/s²
+Speed of light (c):                 3.000e+08 m/s
+
+STEP 1: CALCULATE ORBITAL VELOCITY
+================================================================================
+Formula: v = √(GM / r)
+
+v = √(3.986e+14 / 2.657e+07)
+v = √(1.500e+07)
+v = 3873.226 m/s
+
+Verification: published GPS velocity ≈ 3,874 m/s ✓
+
+STEP 2: SPECIAL RELATIVITY CORRECTION
+================================================================================
+Formula: Δt_SR = -(v² / 2c²) × 86,400 s
+
+v² = 1.500e+07 m²/s²
+2c² = 1.800e+17 m²/s²
+v² / 2c² = 8.334e-11
+
+Δt_SR = -7.201e-06 s
+Δt_SR = -7.20 μs/day
+
+Interpretation: The moving satellite clock runs SLOWER by 7.2 microseconds per day
+due to time dilation from relativistic velocity.
+
+STEP 3: GENERAL RELATIVITY CORRECTION
+================================================================================
+Formula: Δt_GR = (GM / c²) × (1/R_E - 1/r) × 86,400 s
+
+GM / c² = 4.429e-03 m
+1/R_E = 1.570e-07 m⁻¹
+1/r = 3.764e-08 m⁻¹
+(1/R_E - 1/r) = 1.193e-07 m⁻¹
+
+Δt_GR = 4.429e-03 × 1.193e-07 × 86,400
+Δt_GR = 45.66 μs/day
+
+Interpretation: The satellite is in a weaker gravitational field (farther from Earth),
+so its clock runs FASTER by 45.9 microseconds per day compared to ground clocks.
+
+STEP 4: COMBINED RELATIVISTIC CORRECTION
+================================================================================
+Formula: Δt_net = Δt_SR + Δt_GR
+
+Δt_net = -7.20 + 45.66
+Δt_net = 38.46 μs/day
+
+This is the net correction that must be programmed into GPS satellite clocks.
+
+STEP 5: POSITION ERROR WITHOUT CORRECTION
+================================================================================
+Formula: Position error = c × Δt
+
+Δx = 3.000e+08 m/s × 3.846e-05 s
+Δx = 11537.83 m per correction period
+Δx ≈ 11.5 km per day
+
+VERIFICATION AGAINST PUBLISHED SPECIFICATIONS
+================================================================================
+Published GPS specification:        +38.4 μs/day
+Your calculated value:              38.46 μs/day
+Absolute error:                     0.06 μs/day
+Relative error:                     0.15%
+
+✓ RESULT: Your calculation matches published GPS specifications to within 0.3%
+
+================================================================================
+CONCLUSION
+================================================================================
+Einstein's relativity is not theoretical — it is ESSENTIAL for GPS functionality.
+Without the 38.5 μs/day correction:
+  • GPS position error accumulates at ~11.5 km per day
+  • Navigational systems would be useless within hours
+  • The system proves that relativity is real and measurable
+
+Derived by: Urvish Lanje (Jugend Forscht 2027)
+Date: September 2026
+================================================================================
