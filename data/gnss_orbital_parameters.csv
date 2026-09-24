@@ -1,0 +1,5 @@
+System,Altitude_km,Orbital_Radius_m,Velocity_ms,SR_correction_us_per_day,GR_correction_us_per_day,Net_correction_us_per_day
+GPS,20200,26570000,3874,-7.2,45.9,38.4
+Galileo,23222,29600000,3669,-6.5,47.2,40.7
+GLONASS,19100,25500000,3953,-7.5,45.0,37.5
+BeiDou,21528,27900000,3781,-6.9,46.4,39.5
