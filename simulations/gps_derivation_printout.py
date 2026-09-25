@@ -17,7 +17,7 @@ position_error = c * (net_correction * 1e-6)
 # Generate output text
 output_text = f"""
 ================================================================================
-GPS RELATIVISTIC CLOCK CORRECTION — STEP-BY-STEP DERIVATION
+GPS RELATIVISTIC CLOCK CORRECTION - STEP-BY-STEP DERIVATION
 ================================================================================
 
 INPUT PARAMETERS
@@ -96,7 +96,7 @@ Relative error:                     {abs(net_correction - 38.4) / 38.4 * 100:.2f
 ================================================================================
 CONCLUSION
 ================================================================================
-Einstein's relativity is not theoretical — it is ESSENTIAL for GPS functionality.
+Einstein's relativity is not theoretical - it is ESSENTIAL for GPS functionality.
 Without the {net_correction:.1f} μs/day correction:
   • GPS position error accumulates at ~{position_error/1000:.1f} km per day
   • Navigational systems would be useless within hours
