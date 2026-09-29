@@ -4,13 +4,11 @@ import matplotlib.animation as animation
 import matplotlib.patches as patches
 import os
 
-# ============================================================
-# CONSTANTS
-# ============================================================
+# Constants
 GM = 3.986e14              # Earth GM product [m^3/s^2]
 R_EARTH = 6.371e6          # Earth radius [m]
-SIM_HOURS = 24             # Total simulated hours
-FRAMES = 96                # Number of frames (0.25 hour per frame)
+SIM_HOURS = 24
+FRAMES = 96                # 0.25 hour per frame
 TIME_STEP_HOURS = SIM_HOURS / FRAMES
 EARTH_ROTATION_PER_FRAME = 2 * np.pi / (4 / TIME_STEP_HOURS)
 
@@ -23,9 +21,7 @@ SATELLITES = [
     ("Geostationary", 35786,  42.164e6,  +45.8,  "#aa44ff"),
 ]
 
-# ============================================================
-# PRE-COMPUTE ORBITAL PARAMETERS
-# ============================================================
+# Pre-compute orbital parameters
 sat_data = []
 for name, alt_km, r_m, dilation, color in SATELLITES:
     period_seconds = 2 * np.pi * np.sqrt(r_m**3 / GM)
@@ -42,33 +38,23 @@ for name, alt_km, r_m, dilation, color in SATELLITES:
         "angular_velocity": angular_velocity,
     })
 
-# ============================================================
-# PRE-COMPUTE ALL FRAME DATA
-# ============================================================
-# Pre-compute all positions, angles, and dilations upfront
+# Pre-compute all frame positions and dilations
 frame_data = []
 for frame in range(FRAMES):
     elapsed_hours = frame * TIME_STEP_HOURS
     elapsed_seconds = elapsed_hours * 3600
-    
-    # Earth rotation angle
     earth_angle = frame * EARTH_ROTATION_PER_FRAME
     
     sat_positions = []
-    sat_dilations = []
-    
     for sat in sat_data:
-        # Orbital position
         angle = sat["angular_velocity"] * elapsed_seconds
         x_sat = sat["radius_km"] * np.cos(angle)
         y_sat = sat["radius_km"] * np.sin(angle)
         
-        # Orientation line (toward Earth)
         orient_length = sat["radius_km"] * 0.12
         x_toward_earth = x_sat - orient_length * np.cos(angle)
         y_toward_earth = y_sat - orient_length * np.sin(angle)
         
-        # Cumulative dilation
         cumulative_dilation = sat["dilation_us_per_day"] * (elapsed_hours / SIM_HOURS)
         
         sat_positions.append({
@@ -84,9 +70,7 @@ for frame in range(FRAMES):
         "sat_positions": sat_positions,
     })
 
-# ============================================================
-# FIGURE SETUP
-# ============================================================
+# Figure setup
 fig, ax = plt.subplots(figsize=(14, 12))
 ax.set_aspect('equal')
 ax.set_xlim(-50000, 50000)
@@ -97,18 +81,16 @@ ax.set_ylabel('Distance (km)', fontsize=12, fontweight='bold')
 ax.set_title('Multi-Orbit Time Dilation Visualization: 24-Hour Accumulation', 
              fontsize=14, fontweight='bold')
 
-# Earth (non-animated background)
+# Earth
 earth_circle = patches.Circle((0, 0), R_EARTH / 1000, 
                                facecolor='#2a7f2a', edgecolor='#1a5f1a', 
                                linewidth=2, zorder=10, alpha=0.9)
 ax.add_patch(earth_circle)
 
-# Earth rotation indicator (animated)
+
 earth_rotation_line, = ax.plot([0, R_EARTH/1000], [0, 0], 'w-', linewidth=3, zorder=11)
 
-# ============================================================
-# ORBITAL TRACKS (static background)
-# ============================================================
+# Orbital tracks
 theta_orbit = np.linspace(0, 2*np.pi, 400)
 for sat in sat_data:
     r_km = sat["radius_km"]
@@ -117,7 +99,7 @@ for sat in sat_data:
     ax.plot(x_orbit, y_orbit, '-', color=sat["color"], 
             linewidth=1.5, alpha=0.5, zorder=2)
     
-    # Labels (static)
+
     label_x = r_km * np.cos(np.pi/4)
     label_y = r_km * np.sin(np.pi/4)
     ax.text(label_x, label_y, f'{sat["name"]}\n({sat["alt_km"]} km)', 
@@ -127,9 +109,7 @@ for sat in sat_data:
                       edgecolor=sat["color"], alpha=0.7),
             zorder=5)
 
-# ============================================================
-# SATELLITES (animated)
-# ============================================================
+# Satellites
 sat_dots = []
 sat_orientation_lines = []
 for sat in sat_data:
@@ -140,9 +120,7 @@ for sat in sat_data:
     orient_line, = ax.plot([], [], '-', color=sat["color"], linewidth=2, zorder=14)
     sat_orientation_lines.append(orient_line)
 
-# ============================================================
-# CLOCK COUNTERS (animated)
-# ============================================================
+# Clock counters
 clock_texts = []
 text_x = 35000
 text_y_start = 40000
@@ -156,10 +134,12 @@ for i, sat in enumerate(sat_data):
                   zorder=20)
     clock_texts.append(txt)
 
+# Static title for clock section
+ax.text(text_x, text_y_start + 8000, 'TIME DILATION\n(after 24 hours)', 
+        fontsize=10, fontweight='bold', ha='left', va='bottom', color='#333333',
+        zorder=19)
 
-# ============================================================
-# LEGEND (static)
-# ============================================================
+# Legend
 legend_elements = []
 for sat in sat_data:
     sign = "+" if sat["dilation_us_per_day"] >= 0 else ""
@@ -170,13 +150,10 @@ ax.legend(handles=legend_elements, fontsize=9, loc='lower left',
           framealpha=0.9, edgecolor='gray', title='Time Dilation Rates',
           title_fontsize=10)
 
-# ============================================================
-# ANIMATION FUNCTION (just look up pre-computed values)
-# ============================================================
+# Animation function
 def animate(frame):
     frame_info = frame_data[frame]
     
-    # Update Earth rotation
     earth_angle = frame_info["earth_angle"]
     earth_rotation_line.set_data(
         [0, (R_EARTH/1000) * np.cos(earth_angle)],
@@ -185,20 +162,16 @@ def animate(frame):
     
     artists = [earth_rotation_line]
     
-    # Update all satellites
     for i, (sat, pos_info) in enumerate(zip(sat_data, frame_info["sat_positions"])):
-        # Update dot position
         sat_dots[i].set_data([pos_info["x"]], [pos_info["y"]])
         artists.append(sat_dots[i])
         
-        # Update orientation line
         sat_orientation_lines[i].set_data(
             [pos_info["x"], pos_info["x_toward"]],
             [pos_info["y"], pos_info["y_toward"]]
         )
         artists.append(sat_orientation_lines[i])
         
-        # Update clock counter
         cumulative_dilation = pos_info["dilation"]
         
         if cumulative_dilation >= 0:
@@ -217,9 +190,7 @@ def animate(frame):
     
     return artists
 
-# ============================================================
-# CREATE AND SAVE ANIMATION
-# ============================================================
+# Create and save animation
 anim = animation.FuncAnimation(fig, animate, frames=FRAMES, interval=100, 
                                blit=True, repeat=True, repeat_delay=2000)
 
