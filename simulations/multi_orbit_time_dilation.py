@@ -134,10 +134,6 @@ for i, sat in enumerate(sat_data):
                   zorder=20)
     clock_texts.append(txt)
 
-# Static title for clock section
-ax.text(text_x, text_y_start + 8000, 'TIME DILATION\n(after 24 hours)', 
-        fontsize=10, fontweight='bold', ha='left', va='bottom', color='#333333',
-        zorder=19)
 
 # Legend
 legend_elements = []
