@@ -8,7 +8,7 @@ import os
 GM = 3.986e14              # Earth GM product [m^3/s^2]
 R_EARTH = 6.371e6          # Earth radius [m]
 SIM_HOURS = 24
-FRAMES = 96                # 0.25 hour per frame
+FRAMES = 240                # 0.1 hour per frame
 TIME_STEP_HOURS = SIM_HOURS / FRAMES
 EARTH_ROTATION_PER_FRAME = 2 * np.pi / (4 / TIME_STEP_HOURS)
 
