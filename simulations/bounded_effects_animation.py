@@ -3,66 +3,103 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import matplotlib.patches as patches
 import os
+from bounded_utilities import *
 
 # Constants
-GM = 3.986e14              # Earth GM product [m^3/s^2]
-R_EARTH = 6.371e6          # Earth radius [m]
 SIM_HOURS = 24
-FRAMES = 240                # 0.1 hour per frame
+FRAMES = 240
 TIME_STEP_HOURS = SIM_HOURS / FRAMES
 EARTH_ROTATION_PER_FRAME = 2 * np.pi / (4 / TIME_STEP_HOURS)
 
-# Satellite data: (name, altitude_km, orbital_radius_m, dilation_us_per_day, color)
+# Satellite data
 SATELLITES = [
-    ("ISS",           400,    6.771e6,   -25.4,  "#ff4444"),
-    ("Null-altitude", 3186,   9.557e6,    0.0,   "#ffaa00"),
-    ("GPS",           20200,  26.57e6,   +38.4,  "#44ff44"),
-    ("Galileo",       23222,  29.6e6,    +40.7,  "#44aaff"),
-    ("Geostationary", 35786,  42.164e6,  +45.8,  "#aa44ff"),
+    ("GPS",     20200, 0.015,  "#44ff44"),
+    ("Galileo", 23222, 0.002,  "#44aaff"),
+    ("GLONASS", 19100, 0.0015, "#ff4444"),
+    ("BeiDou",  21528, 0.005,  "#aa44ff"),
 ]
 
-# Pre-compute orbital parameters
+# Ground station
+GROUND_LAT = 53.1
+GROUND_LON = 8.8
+GROUND_ALT = 10
+ground_ecef = latlon_to_ecef(GROUND_LAT, GROUND_LON, GROUND_ALT)
+
+# Pre-compute satellite orbital parameters
 sat_data = []
-for name, alt_km, r_m, dilation, color in SATELLITES:
-    period_seconds = 2 * np.pi * np.sqrt(r_m**3 / GM)
-    period_hours = period_seconds / 3600
-    angular_velocity = 2 * np.pi / period_seconds
+for name, alt_km, e, color in SATELLITES:
+    r_orbit_m = R_EARTH + alt_km * 1000
+    a = r_orbit_m
+    period_s = 2 * np.pi * np.sqrt(a**3 / GM)
+    period_h = period_s / 3600
+    angular_velocity = 2 * np.pi / period_s
+    
     sat_data.append({
         "name": name,
         "alt_km": alt_km,
-        "radius_m": r_m,
-        "radius_km": r_m / 1000,
-        "dilation_us_per_day": dilation,
-        "color": color,
-        "period_hours": period_hours,
+        "a": a,
+        "e": e,
+        "period_s": period_s,
+        "period_h": period_h,
         "angular_velocity": angular_velocity,
+        "color": color,
+        "radius_km": r_orbit_m / 1000,
     })
 
-# Pre-compute all frame positions and dilations
+# Pre-compute frame data
 frame_data = []
 for frame in range(FRAMES):
     elapsed_hours = frame * TIME_STEP_HOURS
-    elapsed_seconds = elapsed_hours * 3600
+    elapsed_s = elapsed_hours * 3600
     earth_angle = frame * EARTH_ROTATION_PER_FRAME
     
     sat_positions = []
     for sat in sat_data:
-        angle = sat["angular_velocity"] * elapsed_seconds
-        x_sat = sat["radius_km"] * np.cos(angle)
-        y_sat = sat["radius_km"] * np.sin(angle)
+        # Mean anomaly
+        M = (2 * np.pi * elapsed_s) / sat["period_s"]
+        M = M % (2 * np.pi)
         
+        # Solve Kepler
+        E = kepler_solver(M, sat["e"])
+        nu = true_anomaly(E, sat["e"])
+        
+        # Orbital position
+        r = satellite_distance(sat["a"], sat["e"], nu)
+        v = satellite_velocity(sat["a"], sat["e"], nu)
+        
+        # Position in orbital plane
+        x_orb = r * np.cos(nu)
+        y_orb = r * np.sin(nu)
+        z_orb = 0
+        
+        # Convert for visualization
+        x_sat = (r / 1000) * np.cos(nu)
+        y_sat = (r / 1000) * np.sin(nu)
+        
+        # Orientation toward Earth
         orient_length = sat["radius_km"] * 0.12
-        x_toward_earth = x_sat - orient_length * np.cos(angle)
-        y_toward_earth = y_sat - orient_length * np.sin(angle)
+        x_toward = x_sat - orient_length * np.cos(nu)
+        y_toward = y_sat - orient_length * np.sin(nu)
         
-        cumulative_dilation = sat["dilation_us_per_day"] * (elapsed_hours / SIM_HOURS)
+        # Bounded corrections
+        ecc_corr = eccentricity_correction_ns(sat["a"], sat["e"], nu, sat["period_s"])
+        r_sat_ecef = satellite_position_ecef(r, nu)
+        sagnac_corr = sagnac_correction_ns(r_sat_ecef, ground_ecef)
+        bounded_total = ecc_corr + sagnac_corr
+        
+        # Position error from bounded effects
+        # 1 ns ≈ 0.3 meters ≈ 0.0003 km
+        position_error_km = bounded_total * 0.0003
         
         sat_positions.append({
             "x": x_sat,
             "y": y_sat,
-            "x_toward": x_toward_earth,
-            "y_toward": y_toward_earth,
-            "dilation": cumulative_dilation,
+            "x_toward": x_toward,
+            "y_toward": y_toward,
+            "ecc": ecc_corr,
+            "sagnac": sagnac_corr,
+            "bounded_total": bounded_total,
+            "position_error_km": position_error_km,
         })
     
     frame_data.append({
@@ -71,14 +108,14 @@ for frame in range(FRAMES):
     })
 
 # Figure setup
-fig, ax = plt.subplots(figsize=(14, 12))
+fig, ax = plt.subplots(figsize=(16, 14))
 ax.set_aspect('equal')
 ax.set_xlim(-50000, 50000)
 ax.set_ylim(-50000, 50000)
 ax.grid(True, alpha=0.3, linestyle='--')
 ax.set_xlabel('Distance (km)', fontsize=12, fontweight='bold')
 ax.set_ylabel('Distance (km)', fontsize=12, fontweight='bold')
-ax.set_title('Multi-Orbit Time Dilation Visualization: 24-Hour Accumulation', 
+ax.set_title('Bounded Effects (Eccentricity + Sagnac) Animation: 24 Hours', 
              fontsize=14, fontweight='bold')
 
 # Earth
@@ -87,12 +124,15 @@ earth_circle = patches.Circle((0, 0), R_EARTH / 1000,
                                linewidth=2, zorder=10, alpha=0.9)
 ax.add_patch(earth_circle)
 
-
 earth_rotation_line, = ax.plot([0, R_EARTH/1000], [0, 0], 'w-', linewidth=3, zorder=11)
+
+# Ground station
+ground_marker, = ax.plot([ground_ecef[0]/1000], [ground_ecef[1]/1000], 'rx', 
+                         markersize=15, markeredgewidth=3, zorder=12, label='Ground Station (Bremen)')
 
 # Orbital tracks
 theta_orbit = np.linspace(0, 2*np.pi, 400)
-label_angles = np.linspace(np.pi/4, 2*np.pi + np.pi/4, len(sat_data), endpoint=False)
+label_angles = [np.pi/4, 3*np.pi/4, 5*np.pi/4, 7*np.pi/4]
 for i, sat in enumerate(sat_data):
     r_km = sat["radius_km"]
     x_orbit = r_km * np.cos(theta_orbit)
@@ -121,36 +161,39 @@ for sat in sat_data:
     orient_line, = ax.plot([], [], '-', color=sat["color"], linewidth=2, zorder=14)
     sat_orientation_lines.append(orient_line)
 
-# Clock counters
-clock_texts = []
+# Correction boxes
+corr_texts = []
 text_x = 48000
-text_y_start = 40000
-text_y_step = -8500
+text_y_start = 45000
+text_y_step = -9000
 for i, sat in enumerate(sat_data):
     y_pos = text_y_start + i * text_y_step
-    txt = ax.text(text_x, y_pos, '', fontsize=10, fontweight='bold',
+    txt = ax.text(text_x, y_pos, '', fontsize=9, fontweight='bold',
                   ha='right', va='center',
                   bbox=dict(boxstyle='round,pad=0.4', facecolor='white', 
                             edgecolor=sat["color"], linewidth=2, alpha=0.85),
                   zorder=20)
-    clock_texts.append(txt)
+    corr_texts.append(txt)
+
 
 
 # Legend
 legend_elements = []
 for sat in sat_data:
-    sign = "+" if sat["dilation_us_per_day"] >= 0 else ""
-    label = f'{sat["name"]}: {sign}{sat["dilation_us_per_day"]:.1f} μs/day'
-    legend_elements.append(plt.Line2D([0], [0], color=sat["color"], lw=3, label=label))
+    legend_elements.append(plt.Line2D([0], [0], color=sat["color"], lw=3, 
+                                    label=f'{sat["name"]} (e={sat["e"]:.4f})'))
+legend_elements.append(plt.Line2D([0], [0], marker='x', color='w', 
+                                 markerfacecolor='r', markersize=10, label='Ground Station'))
 
-ax.legend(handles=legend_elements, fontsize=9, loc='lower left', 
-          framealpha=0.9, edgecolor='gray', title='Time Dilation Rates',
-          title_fontsize=10)
+ax.legend(handles=legend_elements, fontsize=10, loc='lower left', 
+          framealpha=0.9, edgecolor='gray', title='Satellites & Ground',
+          title_fontsize=11)
 
 # Animation function
 def animate(frame):
     frame_info = frame_data[frame]
     
+    # Earth rotation
     earth_angle = frame_info["earth_angle"]
     earth_rotation_line.set_data(
         [0, (R_EARTH/1000) * np.cos(earth_angle)],
@@ -159,6 +202,7 @@ def animate(frame):
     
     artists = [earth_rotation_line]
     
+    # Satellites
     for i, (sat, pos_info) in enumerate(zip(sat_data, frame_info["sat_positions"])):
         sat_dots[i].set_data([pos_info["x"]], [pos_info["y"]])
         artists.append(sat_dots[i])
@@ -169,33 +213,37 @@ def animate(frame):
         )
         artists.append(sat_orientation_lines[i])
         
-        cumulative_dilation = pos_info["dilation"]
+        # Correction text
+        bounded = pos_info["bounded_total"]
+        ecc = pos_info["ecc"]
+        sagnac = pos_info["sagnac"]
         
-        if cumulative_dilation >= 0:
-            status = "FAST"
+        if bounded >= 0:
             color = "green"
+            status = "ahead"
         else:
-            status = "SLOW"
             color = "red"
+            status = "behind"
         
-        sign = "+" if cumulative_dilation >= 0 else ""
-        clock_texts[i].set_text(
-            f'{sat["name"]}\n{sign}{cumulative_dilation:.2f} μs {status}'
+        corr_texts[i].set_text(
+            f'{sat["name"]}\nBounded: {bounded:+.0f} ns\n'
+            f'(ecc: {ecc:+.0f} | sag: {sagnac:+.0f})'
         )
-        clock_texts[i].set_color(color)
-        artists.append(clock_texts[i])
+        corr_texts[i].set_color(color)
+        artists.append(corr_texts[i])
     
     return artists
 
-# Create and save animation
+# Animation
 anim = animation.FuncAnimation(fig, animate, frames=FRAMES, interval=100, 
                                blit=True, repeat=True, repeat_delay=2000)
 
+# Save
 output_dir = 'outputs'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-output_path = os.path.join(output_dir, 'multi_orbit_time_dilation.mp4')
+output_path = os.path.join(output_dir, 'bounded_effects_animation.mp4')
 if not os.path.exists(output_path):
     writer = animation.FFMpegWriter(fps=10, bitrate=2000)
     anim.save(output_path, writer=writer)
