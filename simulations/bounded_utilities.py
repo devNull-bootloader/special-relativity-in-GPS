@@ -1,12 +1,12 @@
 import numpy as np
 
 # Physical constants
-GM = 3.986e14                  # Earth GM product (m^3/s^2)
-c = 3e8                        # Speed of light (m/s)
-R_EARTH = 6.371e6              # Earth radius (m)
-OMEGA_EARTH = 7.2921150e-5     # Earth rotation rate (rad/s)
+GM = 3.986e14                  # Earth GM product
+c = 3e8
+R_EARTH = 6.371e6
+OMEGA_EARTH = 7.2921150e-5     # Earth rotation rate
 
-# Kepler solver: Mean anomaly -> Eccentric anomaly (Newton-Raphson)
+# Mean anomaly -> Eccentric anomaly (Newton-Raphson)
 def kepler_solver(M, e, tol=1e-12, max_iter=100):
     """
     Solve Kepler's equation: M = E - e*sin(E) for E using Newton-Raphson.
@@ -20,7 +20,7 @@ def kepler_solver(M, e, tol=1e-12, max_iter=100):
     Returns:
         E: Eccentric anomaly (radians)
     """
-    E = M if e < 0.8 else np.pi  # Initial guess
+    E = M if e < 0.8 else np.pi
     
     for _ in range(max_iter):
         f = E - e * np.sin(E) - M
