@@ -154,9 +154,9 @@ def sagnac_correction_ns(r_sat, r_receiver):
     # Sagnac formula: 2 * dot_prod / c^2
     factor = 2 * dot_prod / (c**2)
     
-    return factor * 1e9  # Convert to nanoseconds
+    return factor * 1e9
 
-# WGS84 ECEF conversion (latitude, longitude, altitude -> ECEF)
+# WGS84 ECEF conversion=
 def latlon_to_ecef(lat_deg, lon_deg, alt_m):
     """
     Convert geodetic coordinates (lat, lon, altitude) to ECEF.
@@ -167,12 +167,12 @@ def latlon_to_ecef(lat_deg, lon_deg, alt_m):
         alt_m: Altitude (meters above ellipsoid)
     
     Returns:
-        [x, y, z]: ECEF coordinates (m)
+        [x, y, z]: ECEF coordinates
     """
     lat = np.radians(lat_deg)
     lon = np.radians(lon_deg)
     
-    a = 6378137.0              # WGS84 semi-major axis (m)
+    a = 6378137.0              # WGS84 semi-major axis
     e2 = 0.00669438            # WGS84 eccentricity squared
     
     N = a / np.sqrt(1 - e2 * np.sin(lat)**2)
@@ -183,7 +183,7 @@ def latlon_to_ecef(lat_deg, lon_deg, alt_m):
     
     return np.array([x, y, z])
 
-# Orbital position in ECEF (simplified, assumes equatorial reference for now)
+# Orbital position in ECEF
 def satellite_position_ecef(r, nu):
     """
     Convert orbital radius and true anomaly to ECEF position.
