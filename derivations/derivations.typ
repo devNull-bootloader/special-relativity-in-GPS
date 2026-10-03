@@ -12,7 +12,7 @@
 ])
 
 #align(center, text(size: 11pt, style: "italic")[
-  Jugend Forscht 2027 — Urvish Lanje
+  Jugend Forscht 2027 - Urvish Lanje
 ])
 
 #align(center, text(size: 10pt, fill: gray)[
@@ -29,7 +29,7 @@
 
 = Einleitung
 
-Die GPS-Satelliten umkreisen die Erde mit einer Geschwindigkeit von etwa 3.874 m/s in einer Höhe von 20.200 km über der Erdoberfläche. Ihre Atomuhren ticken nicht mit der gleichen Rate wie Uhren auf der Erde — nicht wegen technischer Mängel, sondern wegen Einsteins Relativitätstheorie.
+Die GPS-Satelliten umkreisen die Erde mit einer Geschwindigkeit von etwa 3.874 m/s in einer Höhe von 20.200 km über der Erdoberfläche. Ihre Atomuhren ticken nicht mit der gleichen Rate wie Uhren auf der Erde - nicht wegen technischer Mängel, sondern wegen Einsteins Relativitätstheorie.
 
 Zwei Effekte wirken gleichzeitig:
 
@@ -40,7 +40,8 @@ Die Kombination dieser Effekte führt zu einer *Nettokorrektur von etwa +38,5 μ
 
 Dieses Dokument leitet alle Korrektionen aus ersten Prinzipien her.
 
----
+#line(length: 100%)
+
 
 = Konstanten und Definitionen
 
@@ -57,7 +58,8 @@ Bevor wir beginnen, definieren wir die Konstanten:
 
 Für GPS-Satelliten: $h = 20.200$ km, $r = 26.570 times 10^6$ m, $e = 0.015$
 
----
+#line(length: 100%)
+
 
 = Spezielle Relativität
 
@@ -90,14 +92,14 @@ $ Delta t_"SR" = -frac(v^2, 2c^2) times 86400 text(" s") $
 == GPS Berechnung
 
 Orbitalgeschwindigkeit:
-$ v = sqrt(frac(GM, r)) = sqrt(frac(3.986 times 10^{14}, 26.57 times 10^6)) = 3874 text(" m/s") $
+$ v = sqrt(frac("GM", r)) = sqrt(frac(3.986 times 10^{14}, 26.57 times 10^6)) = 3874 text(" m/s") $
 
 Zeitdilatation:
 $ Delta t_"SR" = -frac((3874)^2, 2 times (3 times 10^8)^2) times 86400 approx -7.2 text(" μs/Tag") $
 
 Das negative Vorzeichen zeigt: Die Satellitenuhr läuft *langsamer*.
 
----
+#line(length: 100%)
 
 = Allgemeine Relativität
 
@@ -107,7 +109,7 @@ Für eine sphärisch symmetrische Masse (Erde) ist die Zeitkomponente:
 
 $ g_{t t} = 1 - frac(r_S, r) $
 
-wobei $r_S = frac(2GM, c^2)$ der *Schwarzschild-Radius* ist.
+wobei $r_S = frac(2"GM", c^2)$ der *Schwarzschild-Radius* ist.
 
 == Gravitationszeitdilatation
 
@@ -131,7 +133,8 @@ $ approx 4.435 times 10^{-3} times 1.193 times 10^{-7} times 86400 approx +45.7 
 
 Das positive Vorzeichen zeigt: Die Satellitenuhr läuft *schneller*.
 
----
+#line(length: 100%)
+
 
 = Kombinierte Korrektur
 
@@ -147,15 +150,16 @@ $ Delta x = c times Delta t = 3 times 10^8 times 38.5 times 10^{-6} = 11.55 text
 
 Ohne die relativistische Korrektur würde GPS nach 24 Stunden um *11,5 km* abweichen.
 
----
+#line(length: 100%)
+
 
 = Die Nullpunkt-Höhe
 
 Es gibt eine Höhe, wo SR und GR sich aufheben: $Delta t_"SR" + Delta t_"GR" = 0$.
 
-Setzen Sie beide Korrektionen gleich null mit $v^2 = GM/r$:
+Setzen Sie beide Korrektionen gleich null mit $v^2 = "GM"/r$:
 
-$ -frac(GM, 2c^2 r) + frac(GM, c^2) (frac(1, R_E) - frac(1, r)) = 0 $
+$ -frac("GM", 2c^2 r) + frac("GM", c^2) (frac(1, R_E) - frac(1, r)) = 0 $
 
 Vereinfachen:
 $ -frac(1, 2r) - frac(1, r) + frac(1, R_E) = 0 $
@@ -173,7 +177,8 @@ $ h = r - R_E = 9.557 times 10^6 - 6.371 times 10^6 = 3.186 times 10^6 text(" m"
 
 Auf dieser Höhe tickt eine Uhr genauso schnell wie auf der Erde.
 
----
+#line(length: 100%)
+
 
 = Begrenzte Effekte
 
@@ -195,9 +200,10 @@ Das Signal braucht ungefähr $70$ ms zum Empfänger. Weil sich die Erde während
 
 $ Delta t_"Sagnac" = frac(bold(Omega) dot (bold(r) _"receiver" times bold(r) _"sat"), c^2) $
 
-Für die geozentrischen Vektoren ist dies äquivalent zu $Delta t_"Sagnac" = frac(Omega, c^2) (x_"receiver" y_"sat" - y_"receiver" x_"sat")$. Die typische Größe beträgt $pm 100$–150 ns.
+Für die geozentrischen Vektoren ist dies äquivalent zu $Delta t_"Sagnac" = frac(Omega, c^2) (x_"receiver" y_"sat" - y_"receiver" x_"sat")$. Die typische Größe beträgt $"pm" 100$–150 ns.
 
----
+#line(length: 100%)
+
 
 = Zusammenfassung
 
@@ -211,7 +217,8 @@ Für die geozentrischen Vektoren ist dies äquivalent zu $Delta t_"Sagnac" = fra
   [Sagnac-Fenster], [Begrenzt], [±100–150 ns],
 )
 
----
+#line(length: 100%)
+
 
 = Referenzen
 
