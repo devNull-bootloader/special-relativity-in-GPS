@@ -9,11 +9,11 @@ GPS satellites experience two competing effects:
 - **Special Relativity (SR):** orbital speed makes onboard clocks run slower.
 - **General Relativity (GR):** weaker gravity at orbital altitude makes onboard clocks run faster.
 
-For GPS, the net correction is about **+38.4 µs/day**. Without applying this correction, position error would grow by roughly **11.5 km per day**.
+For GPS, the net correction is about **+38.5 µs/day**. Without applying this correction, position error would grow by roughly **11.5 km per day**.
 
 ## Repository Status
 
-This repository currently contains the project structure and source placeholders for derivations and simulations. The physics write-up and implementation scripts are being organized.
+The core derivation and simulation scripts are implemented. The repository includes a Typst physics write-up, reproducible Python calculations, GNSS orbital data, and generated plots and animations.
 
 ## Repository Layout
 
@@ -21,20 +21,32 @@ This repository currently contains the project structure and source placeholders
 .
 ├── README.md
 ├── LICENSE
+├── requirements.txt
+├── data/
+│   └── gnss_orbital_parameters.csv
 ├── derivations/
-│   ├── sr_derivation.py
-│   ├── gr_derivation.py
-│   └── null_altitude.py
+│   ├── derivations.typ
+│   └── derivations.pdf
+├── outputs/
+│   ├── gps_derivation.txt
+│   ├── bounded_effects_timeseries.png
+│   ├── bounded_effects_animation.mp4
+│   ├── multi_orbit_time_dilation.mp4
+│   └── position_error_animation.mp4
+├── plots/
+│   ├── altitude_vs_correction.png
+│   └── gnss_comparison_chart.png
 ├── simulations/
-│   ├── altitude_curve.py
-│   ├── gnss_comparison.py
-│   └── animation.py
+│   ├── altitude_correction_curve.py
+│   ├── bounded_effects_animation.py
+│   ├── bounded_effects_timeseries.py
+│   ├── bounded_utilities.py
+│   ├── gnss_comparison_chart.py
+│   ├── gps_derivation_printout.py
+│   ├── multi_orbit_time_dilation.py
+│   └── position_error_animation.py
 └── references/
-    ├── JF2027_GPS_Einstein_ProjectPlan_Urvish.pdf
-    ├── JF2027_JWST_ProjectPlan_Urvish.pdf
-    ├── Jugend-Forscht 2026.pdf
-    ├── Right Hand Rule.jpg
-    └── Zur Elektrodynamik bewegter Körper.pdf
+    └── project references and source material
 ```
 
 ## Getting Started
@@ -44,18 +56,26 @@ git clone https://github.com/devNull-bootloader/special-relativity-in-GPS.git
 cd special-relativity-in-GPS
 ```
 
-When dependency requirements are finalized, install them with:
+Install the Python dependencies with:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-## Planned Work
+The simulation scripts can be run directly from the repository root, for example:
 
-- Implement SR, GR, and null-altitude derivation scripts.
-- Add reproducible simulation outputs and plots.
+```bash
+python simulations/altitude_correction_curve.py
+python simulations/gnss_comparison_chart.py
+```
+
+The derivation document is `derivations/derivations.typ` and can be exported with Typst or Tinymist.
+
+## Next Steps
+
+- Refine the derivation and simulation documentation.
 - Add verification scripts and expected numeric results.
-- Expand documentation with equations, assumptions, and data sources.
+- Compare additional GNSS constellations and orbital parameters.
 
 ## References
 
