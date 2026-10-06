@@ -11,21 +11,16 @@
   Vollständige mathematische Herleitungen
 ])
 
-#align(center, text(size: 11pt, style: "italic")[
+#align(center, text(size: 11pt)[
   Jugend Forscht 2027 - Urvish Lanje
 ])
 
-#align(center, text(size: 10pt, fill: gray)[
-  September 2026
-])
-
----
 
 = Inhaltsverzeichnis
 
 #outline(depth: 2, indent: 1em)
 
----
+#line(length: 100%)
 
 = Einleitung
 
