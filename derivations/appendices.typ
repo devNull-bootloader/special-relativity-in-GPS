@@ -11,6 +11,10 @@
   Orbitalmechanik, GNSS-Konstellationsdaten und Simulationsmethoden
 ])
 
+= Inhaltsverzeichnis
+
+#outline(depth: 2, indent: 1em)
+
 #line(length: 100%)
 
 = Anhang B: Grundlagen der Orbitalmechanik
