@@ -29,14 +29,14 @@
 
 = Einleitung
 
-Die GPS-Satelliten umkreisen die Erde mit einer Geschwindigkeit von etwa 3.874 m/s in einer Höhe von 20.200 km über der Erdoberfläche. Ihre Atomuhren ticken nicht mit der gleichen Rate wie Uhren auf der Erde - nicht wegen technischer Mängel, sondern wegen Einsteins Relativitätstheorie.
+Die GPS-Satelliten umkreisen die Erde mit einer Geschwindigkeit von etwa 3.874 m/s in einer Höhe von 20.200 km über der Erdoberfläche. Ihre Atomuhren ticken nicht mit der gleichen Rate wie Uhren auf der Erde wegen Einsteins Relativitätstheorie.
 
 Zwei Effekte wirken gleichzeitig:
 
 + *Spezielle Relativität (SR):* Der bewegte Satellit; seine Uhr läuft langsamer
 + *Allgemeine Relativität (GR):* Der Satellit ist in einem schwächeren Gravitationsfeld; seine Uhr läuft schneller
 
-Die Kombination dieser Effekte führt zu einer *Nettokorrektur von etwa +38,5 μs/Tag*, die im GPS-System berücksichtigt werden muss. Ohne diese Korrektur würde die Positionsgenauigkeit um etwa 11,5 km pro Tag abnehmen.
+Die Kombination dieser Effekte führt zu einer *Gesamtkorrektur von etwa +38,5 μs/Tag*, die im GPS-System berücksichtigt werden muss. Ohne diese Korrektur würde die Positionsgenauigkeit um etwa 11,5 km pro Tag abnehmen.
 
 Dieses Dokument leitet alle Korrektionen aus ersten Prinzipien her.
 
@@ -45,7 +45,7 @@ Dieses Dokument leitet alle Korrektionen aus ersten Prinzipien her.
 
 = Konstanten und Definitionen
 
-Bevor wir beginnen, definieren wir die Konstanten:
+Bevor man beginnt, definiert man die Konstanten:
 
 #table(
   columns: (1fr, 2fr, 1fr),
@@ -65,7 +65,7 @@ Für GPS-Satelliten: $h = 20.200$ km, $r = 26.570 times 10^6$ m, $e = 0.015$
 
 == Die Lichtuhr
 
-Ein Photon springt zwischen zwei Spiegeln hin und her, getrennt durch Distanz $L$.
+Ein Photon springt zwischen zwei Spiegeln hin und her, getrennt durch Abstand $L$.
 
 *Im Ruhesystem des Satelliten:*
 $ t_0 = frac(2L, c) $
@@ -97,7 +97,7 @@ $ v = sqrt(frac("GM", r)) = sqrt(frac(3.986 times 10^{14}, 26.57 times 10^6)) = 
 Zeitdilatation:
 $ Delta t_"SR" = -frac((3874)^2, 2 times (3 times 10^8)^2) times 86400 approx -7.2 text(" μs/Tag") $
 
-Das negative Vorzeichen zeigt: Die Satellitenuhr läuft *langsamer*.
+Das negative Vorzeichen zeigt, dass die Satellitenuhr *langsamer* läuft.
 
 #line(length: 100%)
 
@@ -105,7 +105,7 @@ Das negative Vorzeichen zeigt: Die Satellitenuhr läuft *langsamer*.
 
 == Schwarzschild-Metrik
 
-Für eine sphärisch symmetrische Masse (Erde) ist die Zeitkomponente:
+Für eine kugelsymmetrische Masse (Erde) ist die Zeitkomponente:
 
 $ g_{t t} = 1 - frac(r_S, r) $
 
@@ -131,7 +131,7 @@ $ Delta t_"GR" = frac(r_S, 2) (frac(1, R_E) - frac(1, r_"orbit")) times 86400 $
 
 $ approx 4.435 times 10^{-3} times 1.193 times 10^{-7} times 86400 approx +45.7 text(" μs/Tag") $
 
-Das positive Vorzeichen zeigt: Die Satellitenuhr läuft *schneller*.
+Das positive Vorzeichen zeigt, dass die Satellitenuhr *schneller* läuft.
 
 #line(length: 100%)
 
@@ -157,7 +157,7 @@ Ohne die relativistische Korrektur würde GPS nach 24 Stunden um *11,5 km* abwei
 
 Es gibt eine Höhe, wo SR und GR sich aufheben: $Delta t_"SR" + Delta t_"GR" = 0$.
 
-Setzen Sie beide Korrektionen gleich null mit $v^2 = "GM"/r$:
+Setzt man beide Korrektionen gleich null mit $v^2 = "GM"/r$:
 
 $ -frac("GM", 2c^2 r) + frac("GM", c^2) (frac(1, R_E) - frac(1, r)) = 0 $
 
@@ -192,7 +192,7 @@ Die periodische relativistische Korrektur einer elliptischen Bahn ist, bis auf e
 
 $ Delta t_"ecc" approx -frac(2 e sqrt(G M_E a), c^2) sin(E) $
 
-Dabei ist $E$ die exzentrische Anomalie. Für GPS mit $e = 0.015$ und $a approx 26.57 times 10^6$ m beträgt die Amplitude ungefähr $34$ ns.
+Dabei ist $E$ die sogenannte exzentrische Anomalie. Für GPS mit $e = 0.015$ und $a approx 26.57 times 10^6$ m beträgt die Amplitude ungefähr $34$ ns.
 
 == Sagnac-Effekt
 
@@ -200,7 +200,7 @@ Das Signal braucht ungefähr $70$ ms zum Empfänger. Weil sich die Erde während
 
 $ Delta t_"Sagnac" = frac(bold(Omega) dot (bold(r) _"receiver" times bold(r) _"sat"), c^2) $
 
-Für die geozentrischen Vektoren ist dies äquivalent zu $Delta t_"Sagnac" = frac(Omega, c^2) (x_"receiver" y_"sat" - y_"receiver" x_"sat")$. Die typische Größe beträgt $"pm" 100$–150 ns.
+Für die geozentrischen Vektoren bedeutet dies das Gleiche wie $Delta t_"Sagnac" = frac(Omega, c^2) (x_"receiver" y_"sat" - y_"receiver" x_"sat")$. Die typische Größe beträgt $"pm" 100$–150 ns.
 
 #line(length: 100%)
 
@@ -210,9 +210,9 @@ Für die geozentrischen Vektoren ist dies äquivalent zu $Delta t_"Sagnac" = fra
 #table(
   columns: (1.5fr, 1fr, 1fr),
   [*Effekt*], [*Typ*], [*Größe*],
-  [Spezielle Relativität], [Säkular], [-7.2 μs/Tag],
-  [Allgemeine Relativität], [Säkular], [+45.7 μs/Tag],
-  [Nettokorrektur (GPS)], [Säkular], [+38.5 μs/Tag],
+  [Spezielle Relativität], [Linear], [-7.2 μs/Tag],
+  [Allgemeine Relativität], [Linear], [+45.7 μs/Tag],
+  [Nettokorrektur (GPS)], [Linear], [+38.5 μs/Tag],
   [Exzentrizität (GPS)], [Begrenzt], [±34 ns],
   [Sagnac-Fenster], [Begrenzt], [±100–150 ns],
 )
