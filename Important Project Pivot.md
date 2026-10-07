@@ -11,7 +11,7 @@ Your project now splits relativistic positioning errors into two distinct physic
 │    SECULAR (CUMULATIVE) DRIFTS      │               │     BOUNDED (PERIODIC) EFFECTS      │
 ├─────────────────────────────────────┤               ├─────────────────────────────────────┤
 │ • Main Animation Focus (Sim 4)      │               │ • Advanced Module Focus (Sim 5)     │
-│ • SR Velocity Vector (−7.2 μs/d)    │               │ • Elliptical Eccentricity (±45 ns)  │
+│ • SR Velocity Vector (−7.2 μs/d)    │               │ • Elliptical Eccentricity (±34 ns)  │
 │ • GR Schwarzschild (+45.9 μs/d)     │               │ • Sagnac Dynamic Coordinates        │
 │ • Error profile: Compounding        │               │ • Error profile: Oscillating        │
 │   (Grows linearly to 11.5 km/day)   │               │   (Causes localized meter errors)   │
@@ -29,13 +29,13 @@ The following verified data table represents your core dataset, extending your a
 |---|---|---|---|---|
 | Orbital Altitude ($km$) | $20,200$ | $23,222$ | $19,100$ | $21,528$ |
 | Semi-Major Axis ($a$, $m$) | $26.570 \times 10^6$ | $29.600 \times 10^6$ | $25.500 \times 10^6$ | $27.900 \times 10^6$ |
-| Typical Eccentricity ($e$) | $\approx 0.015$ | $\approx 0.002$ | $\approx 0.001$ | $\approx 0.005$ |
+| Model Eccentricity ($e$, MGEX median) | $\approx 0.015$ | $\approx 0.000394$ | $\approx 0.001$ | $\approx 0.006801$ |
 | Mean Velocity ($v$, $m/s$) | $3,874$ | $3,669$ | $3,953$ | $3,781$ |
 | Secular SR Dilation ($\mu s/d$) | $-7.2$ | $-6.5$ | $-7.5$ | $-6.9$ |
 | Secular GR Dilation ($\mu s/d$) | $+45.9$ | $+47.2$ | $+45.1$ | $+46.4$ |
-| Net Cumulative Drift ($\mu s/d$) | $\mathbf{+38.4}$ | $\mathbf{+40.7}$ | $\mathbf{+37.6}$ | $\mathbf{+39.5}$ |
+| Net Cumulative Drift ($\mu s/d$) | $\mathbf{+38.5}$ | $\mathbf{+40.7}$ | $\mathbf{+37.6}$ | $\mathbf{+39.5}$ |
 | Secular Range Drift ($km/d$) | $\approx 11.52$ | $\approx 12.20$ | $\approx 11.27$ | $\approx 11.84$ |
-| Peak Eccentricity Error ($\Delta t_{ecc}$) | $\approx \pm 45\text{ ns}$ | $\approx \pm 7\text{ ns}$ | $\approx \pm 3\text{ ns}$ | $\approx \pm 16\text{ ns}$ |
+| Model Peak Eccentricity Error ($\Delta t_{ecc}$) | $\approx \pm 34\text{ ns}$ | $\approx \pm 4.8\text{ ns}$ | $\approx \pm 3.4\text{ ns}$ | $\approx \pm 11.7\text{ ns}$ |
 | Max Ground Sagnac Window | $\approx \pm 133\text{ ns}$ | $\approx \pm 165\text{ ns}$ | $\approx \pm 123\text{ ns}$ | $\approx \pm 146\text{ ns}$ |
 
 ------------------------------
@@ -74,4 +74,4 @@ Because all foundational scripts are already compiled, your project schedule tra
 ## 4. Strategic Jury Defense Position
 By shifting your project structure to this design, your answer to the signature judge opening question—"What did you calculate yourself?"—becomes practically bulletproof for a 7th-grade submission:
 
-"My investigation maps the relativistic requirements of global navigation satellite systems. To achieve this, I decoupled the physics into two layers. In my primary models, I isolated the secular, cumulative clock drifts derived from the Lorentz factor and Schwarzschild metric. This shows why position tracking fails continuously by roughly $11.5\text{ km}$ per day without Einstein. Since I completed these calculations early, I built an advanced orbital simulator modeling non-circular Keplerian parameters. This allows me to map the periodic $\pm 45\text{ ns}$ eccentricity waves and instantaneous Sagnac coordinate shifts required for operational meter-level accuracy."
+"My investigation maps the relativistic requirements of global navigation satellite systems. To achieve this, I decoupled the physics into two layers. In my primary models, I isolated the secular, cumulative clock drifts derived from the Lorentz factor and Schwarzschild metric. This shows why position tracking fails continuously by roughly $11.5\text{ km}$ per day without Einstein. Since I completed these calculations early, I built an advanced orbital simulator modeling non-circular Keplerian parameters. This allows me to map the periodic $\pm 34\text{ ns}$ eccentricity waves and instantaneous Sagnac coordinate shifts required for operational meter-level accuracy."

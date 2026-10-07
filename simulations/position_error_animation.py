@@ -5,7 +5,7 @@ import os
 
 # Constants
 c = 3e8                    # Speed of light
-net_correction_us = 38.4   # GPS net correction
+net_correction_us = 38.5   # GPS net correction
 position_error_per_day_km = 11.5  # km/day without correction
 
 # Animation parameters
@@ -93,7 +93,7 @@ anim = animation.FuncAnimation(fig, animate, frames=frames, interval=200,
                               blit=True, repeat=True, repeat_delay=2000)
 
 # Save animation
-output_dir = 'outputs'
+output_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'outputs')
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 

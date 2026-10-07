@@ -111,14 +111,14 @@ def gr_correction_ns_per_day(r, orbital_period_s):
     return factor * 86400 * 1e9  # Convert to ns/day
 
 # Eccentricity oscillating component (nanoseconds)
-def eccentricity_correction_ns(a, e, nu, orbital_period_s):
+def eccentricity_correction_ns(a, e, eccentric_anomaly, orbital_period_s):
     """
     Eccentricity-induced oscillating correction.
     
     Args:
         a: Semi-major axis (m)
         e: Eccentricity
-        nu: True anomaly (radians)
+        eccentric_anomaly: Eccentric anomaly (radians)
         orbital_period_s: Orbital period (seconds)
     
     Returns:
@@ -128,7 +128,7 @@ def eccentricity_correction_ns(a, e, nu, orbital_period_s):
         return 0.0
     
     v_circ = np.sqrt(GM / a)
-    factor = -(e / (1 - e**2)) * (v_circ**2 / c**2) * np.sin(nu)
+    factor = -(e / np.pi) * (v_circ**2 / c**2) * np.sin(eccentric_anomaly)
     return factor * orbital_period_s * 1e9  # Convert to nanoseconds
 
 # Sagnac correction (nanoseconds)
@@ -151,8 +151,8 @@ def sagnac_correction_ns(r_sat, r_receiver):
     # Dot product: (Ω_E × r_sat) · r_receiver
     dot_prod = np.dot(cross_prod, r_receiver)
     
-    # Sagnac formula: 2 * dot_prod / c^2
-    factor = 2 * dot_prod / (c**2)
+    # Sagnac formula in the cross-product convention: dot_prod / c^2
+    factor = dot_prod / (c**2)
     
     return factor * 1e9
 

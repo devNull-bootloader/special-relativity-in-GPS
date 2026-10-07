@@ -1,7 +1,7 @@
 #set document(title: "Anhänge: Orbitalmechanik, GNSS-Daten und Simulationsmethoden")
-#set page(numbering: "A-1")
-#set text(font: "New Computer Modern", size: 11pt)
-#set heading(numbering: "A.1")
+#set page(numbering: "1")
+#set text(font: "New Computer Modern", size: 11pt, lang: "de")
+#set heading(numbering: none)
 
 #align(center, text(size: 20pt, weight: "bold")[
   Anhänge
@@ -11,9 +11,7 @@
   Orbitalmechanik, GNSS-Konstellationsdaten und Simulationsmethoden
 ])
 
-= Inhaltsverzeichnis
-
-#outline(depth: 2, indent: 1em)
+#outline(title: [Inhaltsverzeichnis], depth: 2, indent: 1em)
 
 #line(length: 100%)
 
@@ -32,11 +30,11 @@ wobei:
 
 Die Kepler-Gleichung kann nicht algebraisch nach $E$ für gegebenes $M$ gelöst werden. Man verwendet die *Newton-Raphson-Iterationsmethode*:
 
-$ E_{n+1} = E_n - frac(E_n - e sin(E_n) - M, 1 - e cos(E_n)) $
+$ E_(n+1) = E_n - frac(E_n - e sin(E_n) - M, 1 - e cos(E_n)) $
 
 Mit einem Anfangsschätzwert $E_0$ (typischerweise $E_0 = M$ für kleine Exzentrizität) iterieren wir bis zur Konvergenz:
 
-$ |E_{n+1} - E_n| < 10^{-12} $
+$ |E_(n+1) - E_n| < 10^(-12) $
 
 Dies konvergiert typischerweise in 3–5 Iterationen für GPS-ähnliche Exzentrizitäten ($e approx 0.015$).
 
@@ -96,48 +94,56 @@ wobei $M_0$ die mittlere Anomalie zur Epochenzeit $t_0$ ist. Für die Simulation
 
 == Orbitalparameter
 
-Die vier großen GPS-Systeme sind in unterschiedlichen Höhen und auf verschiedenen Umlaufbahnen. Die folgende Tabelle fasst ihre veröffentlichten Parameter zusammen:
+Die vier GNSS-Systeme sind in unterschiedlichen Höhen und auf verschiedenen Umlaufbahnen. Die folgende Tabelle enthält die Modellparameter dieser Simulation. Sie ist keine Auswertung eines bestimmten Broadcast-Ephemeriden-Tages.
 
 #table(
   columns: (1.2fr, 0.9fr, 0.8fr, 1.0fr, 1.0fr, 1.2fr),
   [*System*], [*Höhe (km)*], [*e*], [*Periode (h)*], [*Geschwindigkeit (m/s)*], [*Gesamtkorrektur (μs/Tag)*],
-  [GPS], [20.200], [0.015], [12.0], [3.874], [+38.4],
-  [Galileo], [23.222], [0.002], [14.1], [3.669], [+40.7],
+  [GPS], [20.200], [0.015], [12.0], [3.874], [+38.5],
+  [Galileo], [23.222], [0.000394], [14.1], [3.669], [+40.7],
   [GLONASS], [19.100], [0.0015], [11.2], [3.953], [+37.5],
-  [BeiDou], [21.528], [0.005], [12.9], [3.781], [+39.5],
+  [BeiDou], [21.528], [0.006801], [12.9], [3.781], [+39.5],
 )
 
-== Datenquellen
+== Datenquellen und Verifikationsstatus
 
-Alle Orbitalparameter stammen von der offiziellen Konstellationsdokumentation:
+Die Eccentricitäten für Galileo und BeiDou wurden gegen vier offene DLR-MGEX-Broadcastdateien im RINEX-4-Format geprüft: `brd40650.25p` bis `brd40680.25p` (6.–9. März 2025). Die Dateien stammen aus dem offenen Datensatz https://doi.org/10.5281/zenodo.15110885 und enthalten täglich zusammengeführte Broadcast-Ephemeriden.
 
-+ *GPS:* https://www.gps.gov/technical/icwg/ - Interface Control Document (ICD-GPS-200)
-+ *Galileo:* ESA - Galileo User Handbook v1.3.1
-+ *GLONASS:* GLONASS Standard Positioning Service Interface Control Document (ICD-5)
-+ *BeiDou:* CNSA - BeiDou Navigation Satellite System Signal In Space Interface Control Document
+Für eine reproduzierbare Prüfung ist der IGS Multi-GNSS Pilot Project (MGEX) Broadcast-Ephemeris-Datensatz zu verwenden. IGS beschreibt das Produkt *BRD400DLR* als zusammengeführtes RINEX-4-Produkt für GPS, GLONASS, Galileo und BeiDou: https://igs.org/mgex/mgex-product-descriptions/. Die tägliche Datei enthält je Satellit und Epoche die Broadcast-Orbitparameter; für diese Prüfung ist das Feld $e$ (Eccentricity) auszulesen. Ein bestimmter IGS-Dateiname, Tag und Satellit müssen im Ergebnis angegeben werden.
+
+Die aus diesen Dateien ausgelesenen Bereiche sind $0.0000298 <= e_"Galileo" <= 0.0007732$ und $0.0001015 <= e_"BeiDou" <= 0.0134956$. Für die Einwert-Simulationen verwenden wir die jeweiligen Stichprobenmediane $e_"Galileo" = 0.000394$ und $e_"BeiDou" = 0.006801$. BeiDou umfasst dabei verschiedene Orbitalfamilien; der Median ist daher nur ein Repräsentationswert, keine universelle Konstellationskonstante.
 
 == Exzentrizitäts-Amplituden
 
-Die oszillierende Zeitdilatationskorrektur aufgrund der Exzentrizität hat ungefähr die Amplitude:
+Die oszillierende Zeitdilatationskorrektur aufgrund der Exzentrizität hat in erster Ordnung die Amplitude:
 
-$ A_"ecc" approx frac(e sqrt(G M), (1 - e^2) c^2) times T $
+$ A_"ecc" approx frac(2 e sqrt(G M a), c^2) $
+
+$ A_"ecc" = frac(e, pi) frac(v_"circ"^2, c^2) T $
+
+Dabei ist $a$ die große Halbachse, $v_"circ" = sqrt(G M / a)$ und
+$T = 2 pi sqrt(a^3 / (G M))$. Beide Formen haben die Dimension einer Zeit:
+$sqrt(G M a) / c^2$ ist eine Zeit. Der Faktor $1 / pi$ ist erforderlich, wenn
+die Amplitude mit $v_"circ"^2 T$ ausgedrückt wird.
 
 Berechnete Amplituden:
 
 #table(
   columns: (1fr, 1fr, 1fr),
   [*System*], [*Exzentrizität*], [*Amplitude (ns)*],
-  [GPS], [0.015], [±45],
-  [Galileo], [0.002], [±7],
-  [GLONASS], [0.0015], [±3],
-  [BeiDou], [0.005], [±16],
+  [GPS], [0.015], [±34],
+  [Galileo], [0.000394], [±0.95],
+  [GLONASS], [0.0015], [±3.4],
+  [BeiDou], [0.006801], [±15.9],
 )
 
-== Verifikation gegen veröffentlichte Spezifikationen
+== Vergleich mit Ashby (2003)
 
-Für GPS sagt die veröffentlichte Spezifikation, dass die Gesamtkorrektur *+38.4 μs/Tag* beträgt. Unsere Berechnung ergibt +38.4 μs/Tag. Die Übereinstimmung liegt deshalb bei 99,97%.
+Ashby berichtet in *Relativity in the Global Positioning System* (Living Reviews in Relativity 6, 1 (2003), DOI: 10.12942/lrr-2003-1) keine universelle veröffentlichte Gesamtkorrektur. Die Zahl 38,5 μs/Tag ist hier die Rundung unserer eigenen Rechnung: $-7.20 + 45.66 = 38.46$ μs/Tag.
 
-Die geringe Abweichung (< 0,3 %) entsteht durch Rundungen in den Zwischenschritten und die Schwachfeld-Näherung, was erwartet und für dieses Projekt ausreichend ist.
+Für den periodischen Effekt zitiert Ashby: "For a satellite of eccentricity $e = 0.01$, the maximum size of this term is about 23 ns." Für einen unabhängigen Test mit dem NTS-2-Satelliten nennt er eine gemessene Frequenzabweichung von "+442.5 parts in 10^12" gegenüber einer Vorhersage der Allgemeinen Relativität von "+446.5 parts in 10^12". Diese Werte sind keine Quelle für eine Prozentübereinstimmung unserer vereinfachten Tagesrechnung.
+
+Quelle: https://doi.org/10.12942/lrr-2003-1 (Abschnitte "Relativistic Effects on Satellite Clocks" und "The eccentricity correction").
 
 #line(length: 100%)
 
@@ -145,7 +151,7 @@ Die geringe Abweichung (< 0,3 %) entsteht durch Rundungen in den Zwischenschritt
 
 == Strategie zur Frame-Vorberechnung
 
-Anstatt die Orbitalmechanik und Korrektionen während der Animation in Echtzeit zu berechnen, berechnet man alle 240 Frames (24-Stunden-Simulation, 0,1 Stunde pro Frame) beim Start vor. Dieser Ansatz sorgt für:
+Anstatt die Orbitalmechanik und Korrektionen während der Animation in Echtzeit zu berechnen, berechnet man alle 240 Frames (24-Stunden-Simulation, 0,1 Stunde pro Frame) beim Start vor. Die Erde dreht sich dabei genau einmal in 24 Stunden. Dieser Ansatz sorgt für:
 
 + Sanfte, flackerfreie Animation (kein Rechenaufwand während der Wiedergabe)
 + Reproduzierbare Ergebnisse
@@ -159,11 +165,11 @@ $ t_i = i times Delta t = i times frac(24 text(" Stunden"), 240) $
 
 Alle numerischen Berechnungen verwenden die folgenden Genauigkeitsvorgaben:
 
-+ *Kepler-Solver-Konvergenz:* $|E_{n+1} - E_n| < 10^{-12}$ Radiant
++ *Kepler-Solver-Konvergenz:* $|E_(n+1) - E_n| < 10^(-12)$ Radiant
 + *Gleitkomma-Arithmetik:* IEEE 754 doppelte Genauigkeit (64-Bit)
 + *Zeitberechnung:* Frame-weise in festen Schritten (kein komplexer Gleichungslöser für Kreis- oder Ellipsenbahnen nötig)
 
-Der Kepler-Solver konvergiert zur Genausigkeitsgrenze (von der Maschine) in 3–5 Iterationen für alle GPS-ähnlichen Exzentrizitäten ($e < 0.02$).
+Der Kepler-Solver konvergiert bis zur Genauigkeitsgrenze der Maschine in 3–5 Iterationen für alle GPS-ähnlichen Exzentrizitäten ($e < 0.02$).
 
 == Auswahl der Bodenstation
 
@@ -178,11 +184,11 @@ Für die Animation der begrenzten Effekte verwenden wir Bremen (in Deutschland) 
 )
 
 Die WGS84-Umwandlung ergibt ECEF-Koordinaten:
-$ x approx 3.789 times 10^6 text(" m") $
-$ y approx 9.024 times 10^5 text(" m") $
-$ z approx 5.051 times 10^6 text(" m") $
+$ x approx 3.793 times 10^6 text(" m") $
+$ y approx 0.587 times 10^6 text(" m") $
+$ z approx 5.077 times 10^6 text(" m") $
 
-Entfernung vom Erdmittelpunkt: $approx 6.381 times 10^6$ m (wie erwartet für ~53°N Breitengrad).
+Entfernung vom Erdmittelpunkt: $approx 6.365 times 10^6$ m (wie erwartet für ~53°N Breitengrad).
 
 == Satellitenposition in ECEF
 
@@ -192,15 +198,15 @@ $ x = r cos(nu) $
 $ y = r sin(nu) $
 $ z = 0 text(" (vereinfachte äquatoriale Umlaufbahn)") $
 
-Für diese Simulation ignorieren wir die Neigung der Umlaufbahn, da sie für die Animation der begrenzten Effekte nicht notwendig ist.
+Für diese Visualisierung wird die Bahn weiterhin als äquatorial dargestellt; die realen GNSS-Bahnneigungen von ungefähr 55–65° werden nicht simuliert. Für die Sagnac-Berechnung wird die inertiale Satellitenphase jedoch um den Erdrotationswinkel in das vereinfachte ECEF-Modell gedreht. Bremen wird in der inertialen Darstellung mit der Erde mitgedreht.
 
 == Sagnac-Fenster-Berechnung
 
-Die Sagnac-Fenster-Korrektur basiert auf dem Kreuzprodukt aus dem Rotationsvektor der Erde und der Satellitenposition, welches skalar mit dem Positionsvektor des Empfängers multipliziert wird:
+Die Sagnac-Fenster-Korrektur basiert auf dem Kreuzprodukt aus dem Rotationsvektor der Erde und der Satellitenposition im ECEF, welches skalar mit dem Positionsvektor des Empfängers im selben ECEF-System multipliziert wird:
 
-$ Delta t_"Sagnac" = frac(2 (bold(Omega)_E times vec(r)_"sat") dot vec(r)_"receiver", c^2) $
+$ Delta t_"Sagnac" = frac((bold(Omega)_E times vec(r)_"sat") dot vec(r)_"receiver", c^2) $
 
-wobei $bold(Omega)_E = [0, 0, 7.2921150 times 10^{-5}]$ rad/s (IERS-Standard).
+wobei $bold(Omega)_E = [0, 0, 7.2921150 times 10^(-5)]$ rad/s (IERS-Standard).
 
 Diese Korrektur ändert sich leicht mit der Satellitenposition, reicht von ungefähr $-150$ ns bis $+150$ ns, abhängig von der relativen Geometrie von Satellit und Bodenstation.
 
@@ -220,9 +226,9 @@ Mit angewendeten Korrektionen begrenzen begrenzte Effekte den Fehler auf ungefä
 
 Für die komplette 7-Output-Simulationsanhang:
 
-+ Outputs 1–5 (lineare Effekte): O(Frames × Konstellationen) - unter 1 Sekunde insgesamt
-+ Outputs 6–7 (begrenzte Effekte): O(Frames × Konstellationen) mit Kepler-Solver - ~3–5 Sekunden insgesamt
-+ Animation-Rendering: ~60 Sekunden (FFMpeg-Codierung)
++ Outputs 1–5 (lineare Effekte): $O("Frames" times "Konstellationen")$
++ Outputs 6–7 (begrenzte Effekte): $O("Frames" times "Konstellationen")$ mit Kepler-Solver
++ Animation-Rendering: abhängig von Hardware, FFmpeg-Version, Auflösung und Bitrate; keine Laufzeitmessung liegt vor.
 
 Alle Vorberechnungen laufen beim Start; die Animation wird in Echtzeit bei 10 fps wiedergegeben.
 
@@ -230,8 +236,8 @@ Alle Vorberechnungen laufen beim Start; die Animation wird in Echtzeit bei 10 fp
 
 = Zusammenfassung der Anhänge
 
-Dieses Document enthält:
+Dieses Dokument enthält:
 
 + *Anhang B:* Die mathematische Grundlage für Orbitalmechanik-Code (Kepler-Solver, Vis-Viva, Orbitalradius)
-+ *Anhang C:* Veröffentlichte Konstellationsdaten und Verifikation, dass die Berechnungen mit GPS-Spezifikationen übereinstimmen
++ *Anhang C:* Modellparameter, Quellenstatus und geplante Prüfung gegen IGS-Broadcast-Ephemeriden
 + *Anhang D:* Simulationsmethoden, numerische Toleranzen und Fehlergrenzen

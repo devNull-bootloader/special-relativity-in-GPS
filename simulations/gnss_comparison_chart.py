@@ -4,7 +4,7 @@ import os
 
 # GNSS constellation data (altitude_km, SR_us_per_day, GR_us_per_day, net_us_per_day)
 gnss_systems = {
-    'GPS':     (20200, -7.2,  45.9, 38.4),
+    'GPS':     (20200, -7.2,  45.9, 38.5),
     'Galileo': (23222, -6.5,  47.2, 40.7),
     'GLONASS': (19100, -7.5,  45.0, 37.5),
     'BeiDou':  (21528, -6.9,  46.4, 39.5),

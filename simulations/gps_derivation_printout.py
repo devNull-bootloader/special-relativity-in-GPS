@@ -84,14 +84,12 @@ Formula: Position error = c × Δt
 Δx = {position_error:.2f} m per correction period
 Δx ≈ {position_error / 1000:.1f} km per day
 
-VERIFICATION AGAINST PUBLISHED SPECIFICATIONS
+COMPARISON WITH ASHBY (2003)
 ================================================================================
-Published GPS specification:        +38.4 μs/day
-Your calculated value:              {net_correction:.2f} μs/day
-Absolute error:                     {abs(net_correction - 38.4):.2f} μs/day
-Relative error:                     {abs(net_correction - 38.4) / 38.4 * 100:.2f}%
-
-✓ RESULT: Your calculation matches published GPS specifications to within 0.3%
+Ashby reports for e = 0.01: maximum eccentricity correction about 23 ns.
+Ashby reports for NTS-2: measured +442.5 parts in 10^12,
+compared with a GR prediction of +446.5 parts in 10^12.
+These are independent reference values, not an externally quoted total correction.
 
 ================================================================================
 CONCLUSION
@@ -108,7 +106,7 @@ Date: September 2026
 """
 
 # Save output
-output_dir = 'outputs'
+output_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'outputs')
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 

@@ -10,13 +10,13 @@ R_EARTH = 6.371e6          # Earth radius [m]
 SIM_HOURS = 24
 FRAMES = 240                # 0.1 hour per frame
 TIME_STEP_HOURS = SIM_HOURS / FRAMES
-EARTH_ROTATION_PER_FRAME = 2 * np.pi / (4 / TIME_STEP_HOURS)
+EARTH_ROTATION_PER_FRAME = 2 * np.pi / FRAMES
 
 # Satellite data: (name, altitude_km, orbital_radius_m, dilation_us_per_day, color)
 SATELLITES = [
     ("ISS",           400,    6.771e6,   -25.4,  "#ff4444"),
     ("Null-altitude", 3186,   9.557e6,    0.0,   "#ffaa00"),
-    ("GPS",           20200,  26.57e6,   +38.4,  "#44ff44"),
+    ("GPS",           20200,  26.57e6,   +38.5,  "#44ff44"),
     ("Galileo",       23222,  29.6e6,    +40.7,  "#44aaff"),
     ("Geostationary", 35786,  42.164e6,  +45.8,  "#aa44ff"),
 ]
@@ -191,7 +191,7 @@ def animate(frame):
 anim = animation.FuncAnimation(fig, animate, frames=FRAMES, interval=100, 
                                blit=True, repeat=True, repeat_delay=2000)
 
-output_dir = 'outputs'
+output_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'outputs')
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 

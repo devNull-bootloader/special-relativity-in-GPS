@@ -9,14 +9,14 @@ from bounded_utilities import *
 SIM_HOURS = 24
 FRAMES = 240
 TIME_STEP_HOURS = SIM_HOURS / FRAMES
-EARTH_ROTATION_PER_FRAME = 2 * np.pi / (4 / TIME_STEP_HOURS)
+EARTH_ROTATION_PER_FRAME = 2 * np.pi / FRAMES
 
 # Satellite data
 SATELLITES = [
     ("GPS",     20200, 0.015,  "#44ff44"),
-    ("Galileo", 23222, 0.002,  "#44aaff"),
+    ("Galileo", 23222, 0.000394,  "#44aaff"),
     ("GLONASS", 19100, 0.0015, "#ff4444"),
-    ("BeiDou",  21528, 0.005,  "#aa44ff"),
+    ("BeiDou",  21528, 0.006801,  "#aa44ff"),
 ]
 
 # Ground station
@@ -82,8 +82,8 @@ for frame in range(FRAMES):
         y_toward = y_sat - orient_length * np.sin(nu)
         
         # Bounded corrections
-        ecc_corr = eccentricity_correction_ns(sat["a"], sat["e"], nu, sat["period_s"])
-        r_sat_ecef = satellite_position_ecef(r, nu)
+        ecc_corr = eccentricity_correction_ns(sat["a"], sat["e"], E, sat["period_s"])
+        r_sat_ecef = satellite_position_ecef(r, nu - earth_angle)
         sagnac_corr = sagnac_correction_ns(r_sat_ecef, ground_ecef)
         bounded_total = ecc_corr + sagnac_corr
         
@@ -126,7 +126,7 @@ ax.add_patch(earth_circle)
 
 earth_rotation_line, = ax.plot([0, R_EARTH/1000], [0, 0], 'w-', linewidth=3, zorder=11)
 
-# Ground station
+# Ground station, shown in the inertial visualization frame
 ground_marker, = ax.plot([ground_ecef[0]/1000], [ground_ecef[1]/1000], 'rx', 
                          markersize=15, markeredgewidth=3, zorder=12, label='Ground Station (Bremen)')
 
@@ -199,8 +199,13 @@ def animate(frame):
         [0, (R_EARTH/1000) * np.cos(earth_angle)],
         [0, (R_EARTH/1000) * np.sin(earth_angle)]
     )
+
+    ground_marker.set_data(
+        [(ground_ecef[0] * np.cos(earth_angle) - ground_ecef[1] * np.sin(earth_angle)) / 1000],
+        [(ground_ecef[0] * np.sin(earth_angle) + ground_ecef[1] * np.cos(earth_angle)) / 1000]
+    )
     
-    artists = [earth_rotation_line]
+    artists = [earth_rotation_line, ground_marker]
     
     # Satellites
     for i, (sat, pos_info) in enumerate(zip(sat_data, frame_info["sat_positions"])):
@@ -239,16 +244,13 @@ anim = animation.FuncAnimation(fig, animate, frames=FRAMES, interval=100,
                                blit=True, repeat=True, repeat_delay=2000)
 
 # Save
-output_dir = 'outputs'
+output_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'outputs')
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 output_path = os.path.join(output_dir, 'bounded_effects_animation.mp4')
-if not os.path.exists(output_path):
-    writer = animation.FFMpegWriter(fps=10, bitrate=2000)
-    anim.save(output_path, writer=writer)
-    print(f"Animation saved: {output_path}")
-else:
-    print(f"Animation already exists: {output_path}")
+writer = animation.FFMpegWriter(fps=10, bitrate=2000)
+anim.save(output_path, writer=writer)
+print(f"Animation saved: {output_path}")
 
 plt.show()

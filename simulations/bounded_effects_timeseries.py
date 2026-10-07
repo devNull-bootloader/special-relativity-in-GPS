@@ -6,9 +6,9 @@ from bounded_utilities import *
 # Satellite constellations: (name, altitude_km, eccentricity, color)
 SATELLITES = [
     ("GPS",     20200, 0.015,  "#44ff44"),
-    ("Galileo", 23222, 0.002,  "#44aaff"),
+    ("Galileo", 23222, 0.000394,  "#44aaff"),
     ("GLONASS", 19100, 0.0015, "#ff4444"),
-    ("BeiDou",  21528, 0.005,  "#aa44ff"),
+    ("BeiDou",  21528, 0.006801, "#aa44ff"),
 ]
 
 # Ground station: Bremen, Germany
@@ -59,10 +59,11 @@ for sat in sat_data:
         v = satellite_velocity(sat["a"], sat["e"], nu)
         
         # Eccentricity correction (nanoseconds)
-        ecc_corr = eccentricity_correction_ns(sat["a"], sat["e"], nu, sat["period_s"])
+        ecc_corr = eccentricity_correction_ns(sat["a"], sat["e"], E, sat["period_s"])
         
-        # Sagnac correction
-        r_sat_ecef = satellite_position_ecef(r, nu)
+        # Sagnac uses both positions in the Earth-fixed frame.
+        earth_angle = 2 * np.pi * t / (24 * 3600)
+        r_sat_ecef = satellite_position_ecef(r, nu - earth_angle)
         sagnac_corr = sagnac_correction_ns(r_sat_ecef, ground_ecef)
         
         # Total bounded correction
@@ -99,15 +100,12 @@ for idx, sat in enumerate(sat_data):
 plt.tight_layout()
 
 # Save
-output_dir = 'outputs'
+output_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'outputs')
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 output_path = os.path.join(output_dir, 'bounded_effects_timeseries.png')
-if not os.path.exists(output_path):
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
-    print(f"Plot saved: {output_path}")
-else:
-    print(f"Plot already exists: {output_path}")
+plt.savefig(output_path, dpi=300, bbox_inches='tight')
+print(f"Plot saved: {output_path}")
 
 plt.show()

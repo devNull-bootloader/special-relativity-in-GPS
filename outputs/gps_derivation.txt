@@ -1,6 +1,6 @@
 
 ================================================================================
-GPS RELATIVISTIC CLOCK CORRECTION — STEP-BY-STEP DERIVATION
+GPS RELATIVISTIC CLOCK CORRECTION - STEP-BY-STEP DERIVATION
 ================================================================================
 
 INPUT PARAMETERS
@@ -67,19 +67,17 @@ Formula: Position error = c × Δt
 Δx = 11537.83 m per correction period
 Δx ≈ 11.5 km per day
 
-VERIFICATION AGAINST PUBLISHED SPECIFICATIONS
+COMPARISON WITH ASHBY (2003)
 ================================================================================
-Published GPS specification:        +38.4 μs/day
-Your calculated value:              38.46 μs/day
-Absolute error:                     0.06 μs/day
-Relative error:                     0.15%
-
-✓ RESULT: Your calculation matches published GPS specifications to within 0.3%
+Ashby reports for e = 0.01: maximum eccentricity correction about 23 ns.
+Ashby reports for NTS-2: measured +442.5 parts in 10^12,
+compared with a GR prediction of +446.5 parts in 10^12.
+These are independent reference values, not an externally quoted total correction.
 
 ================================================================================
 CONCLUSION
 ================================================================================
-Einstein's relativity is not theoretical — it is ESSENTIAL for GPS functionality.
+Einstein's relativity is not theoretical - it is ESSENTIAL for GPS functionality.
 Without the 38.5 μs/day correction:
   • GPS position error accumulates at ~11.5 km per day
   • Navigational systems would be useless within hours

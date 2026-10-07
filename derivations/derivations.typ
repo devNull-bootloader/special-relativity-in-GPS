@@ -1,6 +1,6 @@
 #set document(title: "Relativistische Uhrkorrektionen in GPS: Vollständige Herleitungen")
 #set page(numbering: "1")
-#set text(font: "New Computer Modern", size: 11pt)
+#set text(font: "New Computer Modern", size: 11pt, lang: "de")
 #set heading(numbering: "1.1")
 
 #align(center, text(size: 24pt, weight: "bold")[
@@ -16,9 +16,7 @@
 ])
 
 
-= Inhaltsverzeichnis
-
-#outline(depth: 2, indent: 1em)
+#outline(title: [Inhaltsverzeichnis], depth: 2, indent: 1em)
 
 #line(length: 100%)
 
@@ -45,8 +43,8 @@ Bevor man beginnt, definiert man die Konstanten:
 #table(
   columns: (1fr, 2fr, 1fr),
   [*Symbol*], [*Bedeutung*], [*Wert*],
-  [$G$], [Gravitationskonstante], [$6.674 times 10^{-11}$ m³/(kg·s²)],
-  [$M_E$], [Erdmasse], [$5.972 times 10^{24}$ kg],
+  [$G$], [Gravitationskonstante], [$6.674 times 10^(-11)$ m³/(kg·s²)],
+  [$M_E$], [Erdmasse], [$5.972 times 10^(24)$ kg],
   [$c$], [Lichtgeschwindigkeit], [$3 times 10^8$ m/s],
   [$R_E$], [Erdradius], [$6.371 times 10^6$ m],
 )
@@ -87,7 +85,7 @@ $ Delta t_"SR" = -frac(v^2, 2c^2) times 86400 text(" s") $
 == GPS Berechnung
 
 Orbitalgeschwindigkeit:
-$ v = sqrt(frac("GM", r)) = sqrt(frac(3.986 times 10^{14}, 26.57 times 10^6)) = 3874 text(" m/s") $
+$ v = sqrt(frac("GM", r)) = sqrt(frac(3.986 times 10^(14), 26.57 times 10^6)) = 3874 text(" m/s") $
 
 Zeitdilatation:
 $ Delta t_"SR" = -frac((3874)^2, 2 times (3 times 10^8)^2) times 86400 approx -7.2 text(" μs/Tag") $
@@ -102,7 +100,7 @@ Das negative Vorzeichen zeigt, dass die Satellitenuhr *langsamer* läuft.
 
 Für eine kugelsymmetrische Masse (Erde) ist die Zeitkomponente:
 
-$ g_{t t} = 1 - frac(r_S, r) $
+$ g_(t t) = 1 - frac(r_S, r) $
 
 wobei $r_S = frac(2"GM", c^2)$ der *Schwarzschild-Radius* ist.
 
@@ -119,12 +117,12 @@ $ frac(d t_"sat", d t_"ground") approx 1 + frac(r_S, 2) (frac(1, R_E) - frac(1, 
 == GPS Berechnung
 
 Schwarzschild-Radius der Erde:
-$ r_S = frac(2 times 3.986 times 10^{14}, (3 times 10^8)^2) = 8.87 times 10^{-3} text(" m") $
+$ r_S = frac(2 times 3.986 times 10^(14), (3 times 10^8)^2) = 8.87 times 10^(-3) text(" m") $
 
 Gravitationszeitdilatation:
 $ Delta t_"GR" = frac(r_S, 2) (frac(1, R_E) - frac(1, r_"orbit")) times 86400 $
 
-$ approx 4.435 times 10^{-3} times 1.193 times 10^{-7} times 86400 approx +45.7 text(" μs/Tag") $
+$ approx 4.435 times 10^(-3) times 1.193 times 10^(-7) times 86400 approx +45.7 text(" μs/Tag") $
 
 Das positive Vorzeichen zeigt, dass die Satellitenuhr *schneller* läuft.
 
@@ -141,7 +139,7 @@ Dies ist die Korrektur, die in GPS programmiert ist.
 
 == Positionsfehler ohne Korrektur
 
-$ Delta x = c times Delta t = 3 times 10^8 times 38.5 times 10^{-6} = 11.55 text(" km/Tag") $
+$ Delta x = c times Delta t = 3 times 10^8 times 38.5 times 10^(-6) = 11.55 text(" km/Tag") $
 
 Ohne die relativistische Korrektur würde GPS nach 24 Stunden um *11,5 km* abweichen.
 
@@ -151,6 +149,8 @@ Ohne die relativistische Korrektur würde GPS nach 24 Stunden um *11,5 km* abwei
 = Die Nullpunkt-Höhe
 
 Es gibt eine Höhe, wo SR und GR sich aufheben: $Delta t_"SR" + Delta t_"GR" = 0$.
+
+Diese Herleitung ist eine bewusst vereinfachte Näherung. Die Bodenreferenz wird als ruhend im nicht rotierenden Bezugssystem behandelt; ihre eigene Erdrotationsgeschwindigkeit von ungefähr $465$ m/s am Äquator wird nicht berücksichtigt. Außerdem wird die Erde durch eine Kugel mit Radius $R_E$ beschrieben. Für eine reale Uhr auf dem WGS84-Geoid müssten die geographische Breite, die lokale Rotationsgeschwindigkeit, die Abplattung und das effektive Geopotential des Geoids einbezogen werden. Die folgenden $3186$ km sind daher nur der Nullpunkt dieses sphärischen Schwachfeldmodells.
 
 Setzt man beide Korrektionen gleich null mit $v^2 = "GM"/r$:
 
@@ -195,7 +195,7 @@ Das Signal braucht ungefähr $70$ ms zum Empfänger. Weil sich die Erde während
 
 $ Delta t_"Sagnac" = frac(bold(Omega) dot (bold(r) _"receiver" times bold(r) _"sat"), c^2) $
 
-Für die geozentrischen Vektoren bedeutet dies das Gleiche wie $Delta t_"Sagnac" = frac(Omega, c^2) (x_"receiver" y_"sat" - y_"receiver" x_"sat")$. Die typische Größe beträgt $"pm" 100$–150 ns.
+Für die geozentrischen Vektoren bedeutet dies das Gleiche wie $Delta t_"Sagnac" = frac(Omega, c^2) (x_"receiver" y_"sat" - y_"receiver" x_"sat")$. Die typische Größe beträgt $plus.minus 100$–150 ns.
 
 #line(length: 100%)
 
@@ -219,4 +219,4 @@ Für die geozentrischen Vektoren bedeutet dies das Gleiche wie $Delta t_"Sagnac"
 
 + Ashby, Neil. "Relativity in the Global Positioning System." *Living Reviews in Relativity* 6, no. 1 (2003).
 + GPS.gov Technical Specifications.
-+ ESA Galileo User Handbook.
++ International GNSS Service (IGS) MGEX. "BRD400DLR: Merged Multi-GNSS Broadcast Ephemeris Product." https://igs.org/mgex/mgex-product-descriptions/
