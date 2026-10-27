@@ -1,0 +1,16 @@
+Set-Content .gitignore -Value @"
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Python caching
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local IDE configuration files
+.vscode/
+.idea/
+"@
