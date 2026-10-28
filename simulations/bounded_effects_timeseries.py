@@ -24,7 +24,7 @@ for name, alt_km, e, color in SATELLITES:
     a = r_orbit_m
     period_s = 2 * np.pi * np.sqrt(a**3 / GM)
     period_h = period_s / 3600
-    
+
     sat_data.append({
         "name": name,
         "alt_km": alt_km,
@@ -47,52 +47,52 @@ for sat in sat_data:
         # Mean anomaly from time (starting at t=0 with M=0)
         M = (2 * np.pi * t) / sat["period_s"]
         M = M % (2 * np.pi)  # Keep in [0, 2*pi]
-        
+
         # Solve Kepler's equation
         E = kepler_solver(M, sat["e"])
-        
+
         # True anomaly
         nu = true_anomaly(E, sat["e"])
-        
+
         # Orbital radius and velocity
         r = satellite_distance(sat["a"], sat["e"], nu)
         v = satellite_velocity(sat["a"], sat["e"], nu)
-        
+
         # Eccentricity correction (nanoseconds)
         ecc_corr = eccentricity_correction_ns(sat["a"], sat["e"], E, sat["period_s"])
-        
+
         # Sagnac uses both positions in the Earth-fixed frame.
         earth_angle = 2 * np.pi * t / (24 * 3600)
         r_sat_ecef = satellite_position_ecef(r, nu - earth_angle)
         sagnac_corr = sagnac_correction_ns(r_sat_ecef, ground_ecef)
-        
+
         # Total bounded correction
         total_bounded = ecc_corr + sagnac_corr
-        
+
         corrections[sat["name"]]["ecc"].append(ecc_corr)
         corrections[sat["name"]]["sagnac"].append(sagnac_corr)
         corrections[sat["name"]]["total"].append(total_bounded)
 
 # Plot
 fig, axes = plt.subplots(2, 2, figsize=(16, 10))
-fig.suptitle('Bounded Effects (Eccentricity + Sagnac): 24-Hour GNSS Corrections', 
+fig.suptitle('Bounded Effects (Eccentricity + Sagnac): 24-Hour GNSS Corrections',
              fontsize=16, fontweight='bold')
 
 for idx, sat in enumerate(sat_data):
     ax = axes[idx // 2, idx % 2]
-    
-    ax.plot(hours, corrections[sat["name"]]["ecc"], 'r-', linewidth=1.5, 
+
+    ax.plot(hours, corrections[sat["name"]]["ecc"], 'r-', linewidth=1.5,
             label=f'Eccentricity', alpha=0.7)
-    ax.plot(hours, corrections[sat["name"]]["sagnac"], 'b-', linewidth=1.5, 
+    ax.plot(hours, corrections[sat["name"]]["sagnac"], 'b-', linewidth=1.5,
             label=f'Sagnac', alpha=0.7)
-    ax.plot(hours, corrections[sat["name"]]["total"], 'g-', linewidth=2, 
+    ax.plot(hours, corrections[sat["name"]]["total"], 'g-', linewidth=2,
             label=f'Total Bounded', alpha=0.9)
-    
+
     ax.axhline(0, color='gray', linestyle='--', linewidth=1, alpha=0.5)
     ax.grid(True, alpha=0.3)
     ax.set_xlabel('Time (hours)', fontsize=11, fontweight='bold')
     ax.set_ylabel('Correction (nanoseconds)', fontsize=11, fontweight='bold')
-    ax.set_title(f'{sat["name"]} (e={sat["e"]:.4f}, period={sat["period_h"]:.1f} h)', 
+    ax.set_title(f'{sat["name"]} (e={sat["e"]:.4f}, period={sat["period_h"]:.1f} h)',
                  fontsize=12, fontweight='bold')
     ax.legend(fontsize=10, loc='best')
     ax.set_xlim(0, 24)
@@ -100,7 +100,7 @@ for idx, sat in enumerate(sat_data):
 plt.tight_layout()
 
 # Save
-output_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'outputs')
+output_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'plots')
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 

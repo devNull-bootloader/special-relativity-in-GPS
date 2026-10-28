@@ -250,6 +250,11 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 output_path = os.path.join(output_dir, 'bounded_effects_animation.mp4')
+
+# Safely delete the old file first to ensure a completely fresh replacement
+if os.path.exists(output_path):
+    os.remove(output_path)
+
 writer = animation.FFMpegWriter(fps=10, bitrate=2000)
 anim.save(output_path, writer=writer)
 print(f"Animation saved: {output_path}")

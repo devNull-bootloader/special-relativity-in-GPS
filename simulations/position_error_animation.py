@@ -34,7 +34,7 @@ ax.set_aspect('equal')
 ax.grid(True, alpha=0.3, linestyle='--')
 ax.set_xlabel('Distance East (km)', fontsize=12, fontweight='bold')
 ax.set_ylabel('Distance North (km)', fontsize=12, fontweight='bold')
-ax.set_title('GPS Position Error Accumulation Over 24 Hours (Without Relativistic Correction)', 
+ax.set_title('GPS Position Error Accumulation Over 24 Hours (Without Relativistic Correction)',
              fontsize=14, fontweight='bold')
 
 # Origin marker
@@ -49,7 +49,7 @@ scatter_corrected, = ax.plot([], [], 'bo', markersize=8, zorder=4)
 scatter_uncorrected, = ax.plot([], [], 'ro', markersize=8, zorder=4)
 
 # Text annotations
-time_text = ax.text(0.98, 0.98, '', transform=ax.transAxes, 
+time_text = ax.text(0.98, 0.98, '', transform=ax.transAxes,
                     fontsize=12, verticalalignment='top', horizontalalignment='right',
                     bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
 error_text = ax.text(0.98, 0.88, '', transform=ax.transAxes,
@@ -64,32 +64,32 @@ def animate(frame):
     # Update traces
     x_corrected = corrected_distance[:frame+1]
     y_corrected = np.zeros(frame+1)
-    
+
     x_uncorrected = uncorrected_distance[:frame+1]
     y_uncorrected = np.zeros(frame+1)
-    
+
     # Update lines
     line_corrected.set_data(x_corrected, y_corrected)
     line_uncorrected.set_data(x_uncorrected, y_uncorrected)
-    
+
     # Update current positions
     scatter_corrected.set_data([x_corrected[-1]], [y_corrected[-1]])
     scatter_uncorrected.set_data([x_uncorrected[-1]], [y_uncorrected[-1]])
-    
+
     # Update time label
     time_text.set_text(f'Elapsed Time: {frame} hours')
-    
+
     # Update error label
     error_distance = uncorrected_distance[frame]
     if error_distance > 0.1:
         error_text.set_text(f'Position Error: {error_distance:.2f} km')
     else:
         error_text.set_text(f'Position Error: ~0 km')
-    
+
     return line_corrected, line_uncorrected, scatter_corrected, scatter_uncorrected, time_text, error_text
 
 # Create animation
-anim = animation.FuncAnimation(fig, animate, frames=frames, interval=200, 
+anim = animation.FuncAnimation(fig, animate, frames=frames, interval=200,
                               blit=True, repeat=True, repeat_delay=2000)
 
 # Save animation
@@ -98,11 +98,13 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 output_path = os.path.join(output_dir, 'position_error_animation.mp4')
-if not os.path.exists(output_path):
-    writer = animation.FFMpegWriter(fps=5, bitrate=1800)
-    anim.save(output_path, writer=writer)
-    print(f"Animation saved: {output_path}")
-else:
-    print(f"Animation already exists: {output_path}")
+
+# Safely delete the old file first to ensure a completely fresh replacement
+if os.path.exists(output_path):
+    os.remove(output_path)
+
+writer = animation.FFMpegWriter(fps=5, bitrate=1800)
+anim.save(output_path, writer=writer)
+print(f"Animation saved: {output_path}")
 
 plt.show()

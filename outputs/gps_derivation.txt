@@ -48,14 +48,14 @@ GM / c² = 4.429e-03 m
 Δt_GR = 45.66 μs/day
 
 Interpretation: The satellite is in a weaker gravitational field (farther from Earth),
-so its clock runs FASTER by 45.9 microseconds per day compared to ground clocks.
+so its clock runs FASTER by 45.66 microseconds per day compared to ground clocks.
 
 STEP 4: COMBINED RELATIVISTIC CORRECTION
 ================================================================================
 Formula: Δt_net = Δt_SR + Δt_GR
 
 Δt_net = -7.20 + 45.66
-Δt_net = 38.46 μs/day
+Δt_net ≈ +38.5 μs/day
 
 This is the net correction that must be programmed into GPS satellite clocks.
 

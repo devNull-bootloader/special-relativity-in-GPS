@@ -1,6 +1,7 @@
+import csv, os
 import numpy as np
 import matplotlib.pyplot as plt
-import os
+
 
 # Constants
 G = 6.674e-11      # Gravitational constant
@@ -36,15 +37,26 @@ null_altitude = (3/2 * R_E - R_E) / 1000  # Convert to km
 plt.axvline(null_altitude, color='gray', linestyle='--', linewidth=1.5, label=f'Null altitude ({null_altitude:.0f} km)')
 
 # GNSS markers
-gnss_systems = [
-    ('GPS', 20200, 38.4),
-    ('Galileo', 23222, 40.7),
-    ('GLONASS', 19100, 37.5),
-    ('BeiDou', 21528, 39.5),
-]
+script_dir = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.abspath(os.path.join(script_dir, "..", "data", "gnss_orbital_parameters.csv"))
+
+gnss_systems = []
+with open(csv_path, mode='r', encoding='utf-8') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        gnss_systems.append((
+            row['System'],
+            int(row['Altitude_km']),
+            float(row['Net_correction_us_per_day'])
+        ))
+
 
 for name, alt, corr in gnss_systems:
     plt.plot(alt, corr, 'ko', markersize=8)
+    if name == "GLONASS":
+        plt.annotate(name, (alt, corr), xytext=(-20, 10), textcoords='offset points', fontsize=9)
+        continue
+
     plt.annotate(name, (alt, corr), xytext=(5, 10), textcoords='offset points', fontsize=9)
 
 # Labels and formatting
@@ -58,8 +70,7 @@ plt.ylim(-30, 60)
 plt.tight_layout()
 
 # Save
-if not os.path.exists('plots/altitude_vs_correction.png'):
-    plt.savefig('plots/altitude_vs_correction.png', dpi=300, bbox_inches='tight')
-    print("Plot saved: plots/altitude_vs_correction.png")
+plt.savefig('plots/altitude_vs_correction.png', dpi=300, bbox_inches='tight')
+print("Plot saved (overwritten): plots/altitude_vs_correction.png")
 
 plt.show()

@@ -1,14 +1,22 @@
+import csv, os
 import numpy as np
 import matplotlib.pyplot as plt
-import os
 
 # GNSS constellation data (altitude_km, SR_us_per_day, GR_us_per_day, net_us_per_day)
-gnss_systems = {
-    'GPS':     (20200, -7.2,  45.9, 38.5),
-    'Galileo': (23222, -6.5,  47.2, 40.7),
-    'GLONASS': (19100, -7.5,  45.0, 37.5),
-    'BeiDou':  (21528, -6.9,  46.4, 39.5),
-}
+script_dir = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.abspath(os.path.join(script_dir, "..", "data", "gnss_orbital_parameters.csv"))
+
+gnss_systems = {}
+with open(csv_path, mode='r', encoding='utf-8') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        gnss_systems[row['System']] = (
+            int(row['Altitude_km']),
+            float(row['SR_correction_us_per_day']),
+            float(row['GR_correction_us_per_day']),
+            float(row['Net_correction_us_per_day'])
+        )
+
 
 # Data for plotting
 systems = list(gnss_systems.keys())
@@ -36,7 +44,7 @@ for i, (bar, value) in enumerate(zip(bars_net, net_corrections)):
 # Value labels on SR bars
 for bar, value in zip(bars_SR, SR_corrections):
     plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() - 1.5,
-             f'{value:.1f}', ha='center', va='top', fontsize=8, color='white')
+             f'{value:.1f}', ha='center', va='top', fontsize=8)
 
 # Value labels on GR bars
 for bar, value in zip(bars_GR, GR_corrections):
@@ -56,8 +64,7 @@ plt.tight_layout()
 
 # Save
 output_path = 'plots/gnss_comparison_chart.png'
-if not os.path.exists(output_path):
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
-    print(f"Plot saved: {output_path}")
+plt.savefig(output_path, dpi=300, bbox_inches='tight')
+print(f"Plot saved: {output_path}")
 
 plt.show()
