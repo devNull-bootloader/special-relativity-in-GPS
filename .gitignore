@@ -14,3 +14,4 @@ ENV/
 .vscode/
 .idea/
 "@
+ruff.toml
