@@ -15,7 +15,7 @@ EARTH_ROTATION_PER_FRAME = 2 * np.pi / FRAMES
 
 # Satellite data: (name, altitude_km, orbital_radius_m, dilation_us_per_day, color)
 SATELLITES = [
-    ("ISS",           400,    6.771e6,   -25.7,  "#ff4444"),
+    ("ISS",           400,    6.771e6,   -24.7,  "#ff4444"),
     ("Null-altitude", 3186,   9.557e6,    0.0,   "#ffaa00"),
     ("GPS",           20200,  26.57e6,   +38.5,  "#44ff44"),
     ("Galileo",       23222,  29.6e6,    +40.7,  "#44aaff"),

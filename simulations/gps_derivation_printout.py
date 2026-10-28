@@ -5,7 +5,7 @@ altitude_km = 20200
 orbital_radius_m = 26.57e6
 R_E = 6.371e6
 GM = 3.986e14
-c = 3e8
+c = 299792458
 
 # Calculate values
 v = (GM / orbital_radius_m) ** 0.5
@@ -89,7 +89,7 @@ COMPARISON WITH ASHBY (2003)
 Ashby reports for e = 0.01: maximum eccentricity correction about 23 ns.
 Ashby reports for NTS-2: measured +442.5 parts in 10^12,
 compared with a GR prediction of +446.5 parts in 10^12.
-These are independent reference values, not an externally quoted total correction.
+These are independent reference values, where Ashby’s 446.47×10⁻¹² is the total.
 
 ================================================================================
 CONCLUSION

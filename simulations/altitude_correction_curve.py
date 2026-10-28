@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 # Constants
 G = 6.674e-11      # Gravitational constant
 M_E = 5.972e24     # Earth mass
-c = 3e8            # Speed of light
+c = 299792458            # Speed of light
 R_E = 6.371e6      # Earth radius
 GM = 3.986e14      # GM product
 
