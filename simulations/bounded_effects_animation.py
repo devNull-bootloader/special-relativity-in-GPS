@@ -89,7 +89,7 @@ for frame in range(FRAMES):
         bounded_total = ecc_corr + sagnac_corr
 
         # Position error from bounded effects
-        # 1 ns ≈ 0.3 meters ≈ 0.0003 km
+        # 1 ns ~ 0.3 meters ~ 0.0003 km
         position_error_km = bounded_total * 0.0003
 
         sat_positions.append({
@@ -127,7 +127,7 @@ ax.add_patch(earth_circle)
 
 earth_rotation_line, = ax.plot([0, R_EARTH/1000], [0, 0], 'w-', linewidth=3, zorder=11)
 
-# Ground station, shown in the inertial visualization frame
+# Ground station
 ground_marker, = ax.plot([ground_ecef[0]/1000], [ground_ecef[1]/1000], 'rx',
                          markersize=15, markeredgewidth=3, zorder=12, label='Ground Station (Bremen)')
 
@@ -251,7 +251,6 @@ if not os.path.exists(output_dir):
 
 output_path = os.path.join(output_dir, 'bounded_effects_animation.mp4')
 
-# Safely delete the old file first to ensure a completely fresh replacement
 if os.path.exists(output_path):
     os.remove(output_path)
 

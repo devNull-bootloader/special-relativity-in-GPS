@@ -4,9 +4,9 @@ import matplotlib.animation as animation
 import os
 
 # Constants
-c = 3e8                    # Speed of light
-net_correction_us = 38.5   # GPS net correction
-position_error_per_day_km = 11.5  # km/day without correction
+c = 299792458
+net_correction_us = 38.5
+position_error_per_day_km = 11.5
 
 # Animation parameters
 total_hours = 24
@@ -20,7 +20,7 @@ time_hours = np.arange(frames) * time_step
 corrected_distance = np.zeros(frames)  # Blue trace: stays at origin (with tiny jitter)
 uncorrected_distance = position_error_per_day_km / 24 * time_hours  # Red trace: linear drift
 
-# Tiny random jitter for realism
+# Random jitter
 np.random.seed(42)
 corrected_distance += np.random.normal(0, 0.001, frames)  # ±1 meter jitter
 
@@ -40,11 +40,11 @@ ax.set_title('GPS Position Error Accumulation Over 24 Hours (Without Relativisti
 # Origin marker
 ax.plot(0, 0, 'g*', markersize=20, label='True Position', zorder=5)
 
-# Initialize line objects
+# Line objects
 line_corrected, = ax.plot([], [], 'b-', linewidth=2.5, label='Corrected GPS (with Einstein)', zorder=3)
 line_uncorrected, = ax.plot([], [], 'r-', linewidth=2.5, label='Uncorrected GPS (without Einstein)', zorder=2)
 
-# Initialize scatter points
+# Scatter points
 scatter_corrected, = ax.plot([], [], 'bo', markersize=8, zorder=4)
 scatter_uncorrected, = ax.plot([], [], 'ro', markersize=8, zorder=4)
 
@@ -61,25 +61,20 @@ ax.legend(fontsize=11, loc='upper left')
 
 # Animation function
 def animate(frame):
-    # Update traces
     x_corrected = corrected_distance[:frame+1]
     y_corrected = np.zeros(frame+1)
 
     x_uncorrected = uncorrected_distance[:frame+1]
     y_uncorrected = np.zeros(frame+1)
 
-    # Update lines
     line_corrected.set_data(x_corrected, y_corrected)
     line_uncorrected.set_data(x_uncorrected, y_uncorrected)
 
-    # Update current positions
     scatter_corrected.set_data([x_corrected[-1]], [y_corrected[-1]])
     scatter_uncorrected.set_data([x_uncorrected[-1]], [y_uncorrected[-1]])
 
-    # Update time label
     time_text.set_text(f'Elapsed Time: {frame} hours')
 
-    # Update error label
     error_distance = uncorrected_distance[frame]
     if error_distance > 0.1:
         error_text.set_text(f'Position Error: {error_distance:.2f} km')
@@ -99,7 +94,6 @@ if not os.path.exists(output_dir):
 
 output_path = os.path.join(output_dir, 'position_error_animation.mp4')
 
-# Safely delete the old file first to ensure a completely fresh replacement
 if os.path.exists(output_path):
     os.remove(output_path)
 

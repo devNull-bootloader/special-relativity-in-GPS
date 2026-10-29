@@ -2,7 +2,7 @@ import csv, os
 import numpy as np
 import matplotlib.pyplot as plt
 
-# GNSS constellation data (altitude_km, SR_us_per_day, GR_us_per_day, net_us_per_day)
+# GNSS data (altitude_km, SR_us_per_day, GR_us_per_day, net_us_per_day)
 script_dir = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.abspath(os.path.join(script_dir, "..", "data", "gnss_orbital_parameters.csv"))
 
@@ -18,13 +18,13 @@ with open(csv_path, mode='r', encoding='utf-8') as f:
         )
 
 
-# Data for plotting
+# Plotting data
 systems = list(gnss_systems.keys())
 SR_corrections = [gnss_systems[sys][1] for sys in systems]
 GR_corrections = [gnss_systems[sys][2] for sys in systems]
 net_corrections = [gnss_systems[sys][3] for sys in systems]
 
-# Bar chart setup
+# Chart setup
 x = np.arange(len(systems))
 bar_width = 0.25
 
@@ -36,17 +36,15 @@ bars_SR = plt.bar(x - bar_width, SR_corrections, bar_width, label='SR (Special R
 bars_GR = plt.bar(x,            GR_corrections, bar_width, label='GR (General Relativity)', color='blue', alpha=0.8)
 bars_net = plt.bar(x + bar_width, net_corrections, bar_width, label='Net Correction', color='green', alpha=0.8)
 
-# Value labels on net bars
+# Value labels
 for i, (bar, value) in enumerate(zip(bars_net, net_corrections)):
     plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1,
              f'{value:.1f}', ha='center', va='bottom', fontsize=10, fontweight='bold')
 
-# Value labels on SR bars
 for bar, value in zip(bars_SR, SR_corrections):
     plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() - 1.5,
              f'{value:.1f}', ha='center', va='top', fontsize=8)
 
-# Value labels on GR bars
 for bar, value in zip(bars_GR, GR_corrections):
     plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() - 1.5,
              f'{value:.1f}', ha='center', va='top', fontsize=8, color='white')

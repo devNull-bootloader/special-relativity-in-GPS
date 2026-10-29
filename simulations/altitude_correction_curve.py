@@ -14,13 +14,13 @@ GM = 3.986e14      # GM product
 altitude_km = np.linspace(0, 40000, 1000)
 r = altitude_km * 1000 + R_E
 
-# Orbital velocity at each altitude
+# Orbital velocity
 v = np.sqrt(GM / r)
 
-# Special Relativity correction (in μs/day)
+# Special Relativity correction
 SR_correction = -(v**2 / (2 * c**2)) * 86400 * 1e6
 
-# General Relativity correction (in μs/day)
+# General Relativity correction
 GR_correction = (GM / c**2) * (1/R_E - 1/r) * 86400 * 1e6
 
 # Net correction

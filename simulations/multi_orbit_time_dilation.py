@@ -6,14 +6,14 @@ import os
 from matplotlib.lines import Line2D
 
 # Constants
-GM = 3.986e14              # Earth GM product [m^3/s^2]
-R_EARTH = 6.371e6          # Earth radius [m]
+GM = 3.986e14
+R_EARTH = 6.371e6
 SIM_HOURS = 24
-FRAMES = 240                # 0.1 hour per frame
+FRAMES = 240
 TIME_STEP_HOURS = SIM_HOURS / FRAMES
 EARTH_ROTATION_PER_FRAME = 2 * np.pi / FRAMES
 
-# Satellite data: (name, altitude_km, orbital_radius_m, dilation_us_per_day, color)
+# Satellite data (name, altitude_km, orbital_radius_m, dilation_us_per_day, color)
 SATELLITES = [
     ("ISS",           400,    6.771e6,   -24.7,  "#ff4444"),
     ("Null-altitude", 3186,   9.557e6,    0.0,   "#ffaa00"),
@@ -39,7 +39,7 @@ for name, alt_km, r_m, dilation, color in SATELLITES:
         "angular_velocity": angular_velocity,
     })
 
-# Pre-compute all frame positions and dilations
+# Pre-compute frame data and dilations
 frame_data = []
 for frame in range(FRAMES):
     elapsed_hours = frame * TIME_STEP_HOURS
@@ -148,7 +148,7 @@ ax.legend(handles=legend_elements, fontsize=9, loc='lower left',
           framealpha=0.9, edgecolor='gray', title='Time Dilation Rates',
           title_fontsize=10)
 
-# Animation function
+# Animation
 def animate(frame):
     frame_info = frame_data[frame]
 
@@ -188,7 +188,7 @@ def animate(frame):
 
     return artists
 
-# Create and save animation
+# Save animation
 anim = animation.FuncAnimation(fig, animate, frames=FRAMES, interval=100,
                                blit=True, repeat=True, repeat_delay=2000)
 
@@ -198,7 +198,6 @@ if not os.path.exists(output_dir):
 
 output_path = os.path.join(output_dir, 'multi_orbit_time_dilation.mp4')
 
-# Safely delete the old file first to ensure a completely fresh replacement
 if os.path.exists(output_path):
     os.remove(output_path)
 

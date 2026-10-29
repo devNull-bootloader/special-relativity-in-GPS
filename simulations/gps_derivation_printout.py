@@ -14,7 +14,7 @@ GR_correction = (GM / c**2) * (1/R_E - 1/orbital_radius_m) * 86400 * 1e6
 net_correction = SR_correction + GR_correction
 position_error = c * (net_correction * 1e-6)
 
-# Generate output text
+# Generate text
 output_text = f"""
 ================================================================================
 GPS RELATIVISTIC CLOCK CORRECTION - STEP-BY-STEP DERIVATION
@@ -105,7 +105,7 @@ Date: September 2026
 ================================================================================
 """
 
-# Save output
+# Save
 output_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'outputs')
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)

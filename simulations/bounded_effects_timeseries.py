@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import os
 from bounded_utilities import *
 
-# Satellite constellations: (name, altitude_km, eccentricity, color)
+# Satellite constellations (name, altitude_km, eccentricity, color)
 SATELLITES = [
     ("GPS",     20200, 0.015,  "#44ff44"),
     ("Galileo", 23222, 0.000394,  "#44aaff"),
@@ -11,7 +11,7 @@ SATELLITES = [
     ("BeiDou",  21528, 0.006801, "#aa44ff"),
 ]
 
-# Ground station: Bremen, Germany
+# Ground station (Bremen, Germany)
 GROUND_LAT = 53.1
 GROUND_LON = 8.8
 GROUND_ALT = 10
@@ -35,33 +35,33 @@ for name, alt_km, e, color in SATELLITES:
         "color": color,
     })
 
-# Time array: 24 hours
-hours = np.linspace(0, 24, 1440)  # 1 minute resolution
+# 24 hour time array
+hours = np.linspace(0, 24, 1440)
 times_s = hours * 3600
 
-# Pre-compute all corrections
+# Pre-compute corrections
 corrections = {sat["name"]: {"ecc": [], "sagnac": [], "total": []} for sat in sat_data}
 
 for sat in sat_data:
     for t in times_s:
-        # Mean anomaly from time (starting at t=0 with M=0)
+        # Mean anomaly
         M = (2 * np.pi * t) / sat["period_s"]
-        M = M % (2 * np.pi)  # Keep in [0, 2*pi]
+        M = M % (2 * np.pi)
 
-        # Solve Kepler's equation
+        # Solve Kepler
         E = kepler_solver(M, sat["e"])
 
         # True anomaly
         nu = true_anomaly(E, sat["e"])
 
-        # Orbital radius and velocity
+        # Orbital data
         r = satellite_distance(sat["a"], sat["e"], nu)
         v = satellite_velocity(sat["a"], sat["e"], nu)
 
-        # Eccentricity correction (nanoseconds)
+        # Eccentricity correction
         ecc_corr = eccentricity_correction_ns(sat["a"], sat["e"], E, sat["period_s"])
 
-        # Sagnac uses both positions in the Earth-fixed frame.
+        # Sagnac correction
         earth_angle = 2 * np.pi * t / (24 * 3600)
         r_sat_ecef = satellite_position_ecef(r, nu - earth_angle)
         sagnac_corr = sagnac_correction_ns(r_sat_ecef, ground_ecef)
