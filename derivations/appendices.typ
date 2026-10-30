@@ -68,7 +68,7 @@ $ v(nu) = sqrt(G M (frac(2, r(nu)) - frac(1, a))) $
 Im Perigäum (nächster Punkt, $r = a(1 - e)$): Geschwindigkeit ist maximal
 Im Apogäum (fernster Punkt, $r = a(1 + e)$): Geschwindigkeit ist minimal
 
-Für GPS gibt die Näherung für kreisförmige Umlaufbahnen $v_"circ" = sqrt(G M / r) approx 3874$ m/s.
+Für GPS gibt die Näherung für kreisförmige Umlaufbahnen $v_"circ" = sqrt(G M / r) approx 3873$ m/s.
 
 == Orbitalperiode
 
@@ -98,20 +98,16 @@ Die vier GNSS-Systeme sind in unterschiedlichen Höhen und auf verschiedenen Uml
 
 #table(
   columns: (1.2fr, 0.9fr, 0.8fr, 1.0fr, 1.0fr, 1.2fr),
-  [*System*], [*Höhe (km)*], [*e*], [*Periode (h)*], [*Geschwindigkeit (m/s)*], [*Gesamtkorrektur (μs/Tag)*],
-  [GPS], [20.200], [0.015], [12.0], [3.874], [+38.5],
-  [Galileo], [23.222], [0.000394], [14.1], [3.669], [+40.7],
-  [GLONASS], [19.100], [0.0015], [11.2], [3.953], [+37.5],
-  [BeiDou], [21.528], [0.006801], [12.9], [3.781], [+39.5],
+  [*System*], [*Höhe (km)*], [*e*], [*Periode (h)*], [*Geschw. (m/s)*], [*$Delta t_"ges"$ (µs/d)*],
+  [GPS], [20.200], [0.015], [12.0], [3.873], [+38.5],
+  [Galileo], [23.222], [0.000394], [14.1], [3.670], [+40.7],
+  [GLONASS], [19.100], [0.0015], [11.2], [3.954], [+37.6],
+  [BeiDou], [21.528], [0.006801], [12.9], [3.780], [+39.5],
 )
 
-== Datenquellen und Verifikationsstatus
+== Herkunft der Exzentrizitäten
 
-Die Eccentricitäten für Galileo und BeiDou wurden gegen vier offene DLR-MGEX-Broadcastdateien im RINEX-4-Format geprüft: `brd40650.25p` bis `brd40680.25p` (6.–9. März 2025). Die Dateien stammen aus dem offenen Datensatz https://doi.org/10.5281/zenodo.15110885 und enthalten täglich zusammengeführte Broadcast-Ephemeriden.
-
-Für eine reproduzierbare Prüfung ist der IGS Multi-GNSS Pilot Project (MGEX) Broadcast-Ephemeris-Datensatz zu verwenden. IGS beschreibt das Produkt *BRD400DLR* als zusammengeführtes RINEX-4-Produkt für GPS, GLONASS, Galileo und BeiDou: https://igs.org/mgex/mgex-product-descriptions/. Die tägliche Datei enthält je Satellit und Epoche die Broadcast-Orbitparameter; für diese Prüfung ist das Feld $e$ (Eccentricity) auszulesen. Ein bestimmter IGS-Dateiname, Tag und Satellit müssen im Ergebnis angegeben werden.
-
-Die aus diesen Dateien ausgelesenen Bereiche sind $0.0000298 <= e_"Galileo" <= 0.0007732$ und $0.0001015 <= e_"BeiDou" <= 0.0134956$. Für die Einwert-Simulationen verwenden wir die jeweiligen Stichprobenmediane $e_"Galileo" = 0.000394$ und $e_"BeiDou" = 0.006801$. BeiDou umfasst dabei verschiedene Orbitalfamilien; der Median ist daher nur ein Repräsentationswert, keine universelle Konstellationskonstante.
+Die Exzentrizitäten in der Tabelle sind Modellwerte dieser Simulation, keine Auswertung von Broadcast-Ephemeriden. Reale Werte unterscheiden sich von Satellit zu Satellit. Da die Amplitude proportional zu $e$ ist (siehe unten), ändert sich nur die Größe der begrenzten Effekte, nicht die säkulare Korrektur.
 
 == Exzentrizitäts-Amplituden
 
@@ -139,11 +135,11 @@ Berechnete Amplituden:
 
 == Vergleich mit Ashby (2003)
 
-Ashby berichtet in *Relativity in the Global Positioning System* (Living Reviews in Relativity 6, 1 (2003), DOI: 10.12942/lrr-2003-1) keine universelle veröffentlichte Gesamtkorrektur. Die Zahl 38,5 μs/Tag ist hier die Rundung unserer eigenen Rechnung: $-7.20 + 45.66 = 38.46$ μs/Tag.
+Ashby berichtet in *Relativity in the Global Positioning System* (Living Reviews in Relativity 6, 1 (2003), DOI: 10.12942/lrr-2003-1) eine mittlere Frequenzverschiebung der Satellitenuhren von $446.47 times 10^(-12)$, das sind $38.57$ μs/Tag. Unsere Rechnung mit $c = 299 792 458$ m/s ergibt $-7.21 + 45.72 = 38.51$ μs/Tag. Die Abweichung von etwa $0.2 %$ entsteht, weil unser Kugelmodell das Quadrupolmoment der Erde und die Rotation der Bodenuhr nicht berücksichtigt.
 
-Für den periodischen Effekt zitiert Ashby: "For a satellite of eccentricity $e = 0.01$, the maximum size of this term is about 23 ns." Für einen unabhängigen Test mit dem NTS-2-Satelliten nennt er eine gemessene Frequenzabweichung von "+442.5 parts in 10^12" gegenüber einer Vorhersage der Allgemeinen Relativität von "+446.5 parts in 10^12". Diese Werte sind keine Quelle für eine Prozentübereinstimmung unserer vereinfachten Tagesrechnung.
+Für den periodischen Effekt nennt Ashby bei $e = 0.01$ eine maximale Größe von etwa $23$ ns. Unsere Formel liefert dafür $2 e sqrt(G M a) / c^2 = 22.9$ ns. Für einen unabhängigen Test mit dem NTS-2-Satelliten nennt er eine gemessene Frequenzabweichung von $+442.5 times 10^(-12)$ gegenüber einer Vorhersage der Allgemeinen Relativität von $+446.5 times 10^(-12)$.
 
-Quelle: https://doi.org/10.12942/lrr-2003-1 (Abschnitte "Relativistic Effects on Satellite Clocks" und "The eccentricity correction").
+Quelle: https://doi.org/10.12942/lrr-2003-1
 
 #line(length: 100%)
 
@@ -151,7 +147,7 @@ Quelle: https://doi.org/10.12942/lrr-2003-1 (Abschnitte "Relativistic Effects on
 
 == Strategie zur Frame-Vorberechnung
 
-Anstatt die Orbitalmechanik und Korrektionen während der Animation in Echtzeit zu berechnen, berechnet man alle 240 Frames (24-Stunden-Simulation, 0,1 Stunde pro Frame) beim Start vor. Die Erde dreht sich dabei genau einmal in 24 Stunden. Dieser Ansatz sorgt für:
+Anstatt die Orbitalmechanik und Korrektionen während der Animation in Echtzeit zu berechnen, berechnet man alle 240 Frames (24-Stunden-Simulation, 0,1 Stunde pro Frame) beim Start vor. Die Erde dreht sich dabei vereinfacht einmal in 24 Stunden (real: 23 h 56 min). Dieser Ansatz sorgt für:
 
 + Sanfte, flackerfreie Animation (kein Rechenaufwand während der Wiedergabe)
 + Reproduzierbare Ergebnisse
@@ -208,11 +204,11 @@ $ Delta t_"Sagnac" = frac((bold(Omega)_E times vec(r)_"sat") dot vec(r)_"receive
 
 wobei $bold(Omega)_E = [0, 0, 7.2921150 times 10^(-5)]$ rad/s (IERS-Standard).
 
-Diese Korrektur ändert sich leicht mit der Satellitenposition, reicht von ungefähr $-150$ ns bis $+150$ ns, abhängig von der relativen Geometrie von Satellit und Bodenstation.
+Diese Korrektur ändert sich mit der Satellitenposition. Für Bremen in diesem Modell beträgt der Maximalbetrag etwa $83$ ns (GPS), $92$ ns (Galileo), $79$ ns (GLONASS) und $87$ ns (BeiDou), jeweils $Omega rho_"sat" rho_"receiver" / c^2$.
 
 == Fehlergrenzen
 
-Ohne relativistische Korrektionen wächst der Positionsfehler linear:
+Ohne relativistische Korrektionen wächst der Entfernungsfehler linear:
 
 $ Delta x(t) = c times Delta t_"net" times t = 11.5 text(" km/Tag") times t $
 
@@ -220,11 +216,11 @@ Bei $t = 1$ Tag: Fehler = 11,5 km
 Bei $t = 7$ Tagen: Fehler = 80,5 km
 Bei $t = 30$ Tagen: Fehler = 345 km
 
-Mit angewendeten Korrektionen begrenzen begrenzte Effekte den Fehler auf ungefähr $plus.minus 250$ ns ($approx plus.minus 75$ Meter).
+Wird nur die säkulare Korrektur angewendet, verbleibt durch die begrenzten Effekte ein Restfehler von höchstens etwa $plus.minus 83$ bis $plus.minus 117$ ns ($approx 25$ bis $35$ Meter), je nach System. Das ist die Summe der Maxima von Exzentrizität und Sagnac-Effekt für Bremen im Modell.
 
 == Rechenkomplexität
 
-Für die komplette 7-Output-Simulationsanhang:
+Für die komplette Simulationssuite mit 7 Outputs:
 
 + Outputs 1–5 (lineare Effekte): $O("Frames" times "Konstellationen")$
 + Outputs 6–7 (begrenzte Effekte): $O("Frames" times "Konstellationen")$ mit Kepler-Solver
@@ -239,5 +235,5 @@ Alle Vorberechnungen laufen beim Start; die Animation wird in Echtzeit bei 10 fp
 Dieses Dokument enthält:
 
 + *Anhang B:* Die mathematische Grundlage für Orbitalmechanik-Code (Kepler-Solver, Vis-Viva, Orbitalradius)
-+ *Anhang C:* Modellparameter, Quellenstatus und geplante Prüfung gegen IGS-Broadcast-Ephemeriden
++ *Anhang C:* Modellparameter, Exzentrizitäts-Amplituden und Vergleich mit Ashby (2003)
 + *Anhang D:* Simulationsmethoden, numerische Toleranzen und Fehlergrenzen

@@ -65,7 +65,7 @@ GM / c² = {GM / c**2:.3e} m
 Δt_GR = {GR_correction:.2f} μs/day
 
 Interpretation: The satellite is in a weaker gravitational field (farther from Earth),
-so its clock runs FASTER by 45.66 microseconds per day compared to ground clocks.
+so its clock runs FASTER by {GR_correction:.2f} microseconds per day compared to ground clocks.
 
 STEP 4: COMBINED RELATIVISTIC CORRECTION
 ================================================================================
@@ -89,7 +89,8 @@ COMPARISON WITH ASHBY (2003)
 Ashby reports for e = 0.01: maximum eccentricity correction about 23 ns.
 Ashby reports for NTS-2: measured +442.5 parts in 10^12,
 compared with a GR prediction of +446.5 parts in 10^12.
-These are independent reference values, where Ashby’s 446.47×10⁻¹² is the total.
+These are independent reference values.
+Ashby: 446.47×10⁻¹² = 38.57 μs/day. Our 38.5 differs by about 0.2 %.
 
 ================================================================================
 CONCLUSION

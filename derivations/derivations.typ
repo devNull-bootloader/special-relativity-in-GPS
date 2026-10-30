@@ -22,14 +22,14 @@
 
 = Einleitung
 
-Die GPS-Satelliten umkreisen die Erde mit einer Geschwindigkeit von etwa 3.874 m/s in einer Höhe von 20.200 km über der Erdoberfläche. Ihre Atomuhren ticken nicht mit der gleichen Rate wie Uhren auf der Erde wegen Einsteins Relativitätstheorie.
+Die GPS-Satelliten umkreisen die Erde mit einer Geschwindigkeit von etwa 3.873 m/s in einer Höhe von 20.200 km über der Erdoberfläche. Ihre Atomuhren ticken nicht mit der gleichen Rate wie Uhren auf der Erde wegen Einsteins Relativitätstheorie.
 
 Zwei Effekte wirken gleichzeitig:
 
 + *Spezielle Relativität (SR):* Der bewegte Satellit; seine Uhr läuft langsamer
 + *Allgemeine Relativität (GR):* Der Satellit ist in einem schwächeren Gravitationsfeld; seine Uhr läuft schneller
 
-Die Kombination dieser Effekte führt zu einer *Gesamtkorrektur von etwa +38,5 μs/Tag*, die im GPS-System berücksichtigt werden muss. Ohne diese Korrektur würde die Positionsgenauigkeit um etwa 11,5 km pro Tag abnehmen.
+Die Kombination dieser Effekte führt zu einer *Gesamtkorrektur von etwa +38,5 μs/Tag*, die im GPS-System berücksichtigt werden muss. Ohne diese Korrektur würde der Entfernungsfehler pro Satellit um etwa 11,5 km pro Tag wachsen.
 
 Dieses Dokument leitet alle Korrektionen aus ersten Prinzipien her.
 
@@ -45,7 +45,7 @@ Bevor man beginnt, definiert man die Konstanten:
   [*Symbol*], [*Bedeutung*], [*Wert*],
   [$G$], [Gravitationskonstante], [$6.674 times 10^(-11)$ m³/(kg·s²)],
   [$M_E$], [Erdmasse], [$5.972 times 10^(24)$ kg],
-  [$c$], [Lichtgeschwindigkeit], [$3 times 10^8$ m/s],
+  [$c$], [Lichtgeschwindigkeit], [$2.998 times 10^8$ m/s],
   [$R_E$], [Erdradius], [$6.371 times 10^6$ m],
 )
 
@@ -78,17 +78,17 @@ Für GPS ist $v^2/c^2$ sehr klein. Mit Reihenentwicklung:
 
 $ gamma approx 1 + frac(v^2, 2c^2) $
 
-Die Zeitdilatation über einen Tag:
+Die Satellitenuhr misst die Eigenzeit $t_0 = t / gamma approx t (1 - v^2/(2c^2))$ und geht daher langsamer. Die Zeitdilatation über einen Tag:
 
 $ Delta t_"SR" = -frac(v^2, 2c^2) times 86400 text(" s") $
 
 == GPS Berechnung
 
 Orbitalgeschwindigkeit:
-$ v = sqrt(frac("GM", r)) = sqrt(frac(3.986 times 10^(14), 26.57 times 10^6)) = 3874 text(" m/s") $
+$ v = sqrt(frac("GM", r)) = sqrt(frac(3.986 times 10^(14), 26.57 times 10^6)) approx 3873 text(" m/s") $
 
 Zeitdilatation:
-$ Delta t_"SR" = -frac((3874)^2, 2 times (3 times 10^8)^2) times 86400 approx -7.2 text(" μs/Tag") $
+$ Delta t_"SR" = -frac((3873)^2, 2 times (2.998 times 10^8)^2) times 86400 approx -7.2 text(" μs/Tag") $
 
 Das negative Vorzeichen zeigt, dass die Satellitenuhr *langsamer* läuft.
 
@@ -106,20 +106,20 @@ wobei $r_S = frac(2"GM", c^2)$ der *Schwarzschild-Radius* ist.
 
 == Gravitationszeitdilatation
 
-Das Verhältnis der Zeitraten zwischen zwei Positionen:
+Eine ruhende Uhr bei Radius $r$ misst die Eigenzeit $d tau = sqrt(1 - r_S/r) d t$ ($d t$: Koordinatenzeit). Das Verhältnis der Zeitraten zwischen zwei Positionen ist daher:
 
-$ frac(d t_"sat", d t_"ground") = frac(sqrt(1 - r_S/r_"orbit"), sqrt(1 - r_S/R_E)) $
+$ frac(d tau_"sat", d tau_"ground") = frac(sqrt(1 - r_S/r_"orbit"), sqrt(1 - r_S/R_E)) $
 
 Mit schwacher Feldnäherung:
 
-$ frac(d t_"sat", d t_"ground") approx 1 + frac(r_S, 2) (frac(1, R_E) - frac(1, r_"orbit")) $
+$ frac(d tau_"sat", d tau_"ground") approx 1 + frac(r_S, 2) (frac(1, R_E) - frac(1, r_"orbit")) $
 
 == GPS Berechnung
 
 Schwarzschild-Radius der Erde:
-$ r_S = frac(2 times 3.986 times 10^(14), (3 times 10^8)^2) = 8.87 times 10^(-3) text(" m") $
+$ r_S = frac(2 times 3.986 times 10^(14), (2.998 times 10^8)^2) = 8.87 times 10^(-3) text(" m") $
 
-Gravitationszeitdilatation:
+Mit $1 / R_E - 1 / r_"orbit" = 1.5696 times 10^(-7) - 0.3764 times 10^(-7) = 1.1932 times 10^(-7)$ 1/m ergibt sich die Gravitationszeitdilatation:
 $ Delta t_"GR" = frac(r_S, 2) (frac(1, R_E) - frac(1, r_"orbit")) times 86400 $
 
 $ approx 4.435 times 10^(-3) times 1.193 times 10^(-7) times 86400 approx +45.7 text(" μs/Tag") $
@@ -135,13 +135,13 @@ SR und GR wirken gleichzeitig:
 
 $ Delta t_"net" = Delta t_"SR" + Delta t_"GR" = -7.2 + 45.7 = +38.5 text(" μs/Tag") $
 
-Dies ist die Korrektur, die in GPS programmiert ist.
+Die Satellitenuhr geht also um $38.5$ μs pro Tag zu schnell. Deshalb wird ihre Frequenz vor dem Start um $Delta f / f approx -4.46 times 10^(-10)$ verringert. Ashby nennt $-446.47 times 10^(-12)$, das sind $38.57$ μs/Tag. Unser Wert weicht um etwa $0.2 %$ ab, weil das Kugelmodell das Quadrupolmoment der Erde und die Rotation der Bodenuhr nicht enthält.
 
-== Positionsfehler ohne Korrektur
+== Entfernungsfehler ohne Korrektur
 
-$ Delta x = c times Delta t = 3 times 10^8 times 38.5 times 10^(-6) = 11.55 text(" km/Tag") $
+$ Delta x = c times Delta t = 2.998 times 10^8 times 38.5 times 10^(-6) = 11.54 text(" km/Tag") $
 
-Ohne die relativistische Korrektur würde GPS nach 24 Stunden um *11,5 km* abweichen.
+Ohne die relativistische Korrektur würde der Entfernungsfehler (Pseudorange) pro Satellit nach 24 Stunden *11,5 km* betragen.
 
 #line(length: 100%)
 
@@ -189,13 +189,53 @@ $ Delta t_"ecc" approx -frac(2 e sqrt(G M_E a), c^2) sin(E) $
 
 Dabei ist $E$ die sogenannte exzentrische Anomalie. Für GPS mit $e = 0.015$ und $a approx 26.57 times 10^6$ m beträgt die Amplitude ungefähr $34$ ns.
 
+*Herleitung (erste Ordnung in $e$):* Für eine Uhr im Orbit gilt
+
+$ frac(d tau, d t) - 1 = -frac(G M, r c^2) - frac(v^2, 2 c^2) $
+
+Mit der Vis-Viva-Gleichung und $r = a (1 - e cos(E))$ gilt
+
+$ v^2 = G M (frac(2, r) - frac(1, a)) quad "und" quad frac(1, r) approx frac(1 + e cos(E), a) $
+
+Damit folgt
+
+$ frac(d tau, d t) - 1 approx -frac(3 G M, 2 a c^2) - frac(2 G M e, a c^2) cos(E) $
+
+Der erste Term ist konstant (säkularer Anteil). Mit der Kepler-Gleichung gilt
+
+$ d t = frac((1 - e cos(E)) d E, n) quad "mit" quad n = sqrt(frac(G M, a^3)) $
+
+Die Integration des zweiten Terms ergibt in erster Ordnung
+
+$ Delta t_"ecc" = -frac(2 G M e, a c^2 n) sin(E) = -frac(2 e sqrt(G M a), c^2) sin(E) $
+
 == Sagnac-Effekt
 
 Das Signal braucht ungefähr $70$ ms zum Empfänger. Weil sich die Erde währenddessen dreht, muss zusätzlich die Sagnac-Korrektur berücksichtigt werden:
 
-$ Delta t_"Sagnac" = frac(bold(Omega) dot (bold(r) _"receiver" times bold(r) _"sat"), c^2) $
+$ Delta t_"Sagnac" = frac((bold(Omega) times bold(r)_"sat") dot bold(r)_"receiver", c^2) $
 
-Für die geozentrischen Vektoren bedeutet dies das Gleiche wie $Delta t_"Sagnac" = frac(Omega, c^2) (x_"receiver" y_"sat" - y_"receiver" x_"sat")$. Die typische Größe beträgt $plus.minus 100$–150 ns.
+Dies ist die zusätzliche Laufzeit des Signals. Herleitung: In einem nicht rotierenden System bewegt sich der Empfänger mit $bold(v) = bold(Omega) times bold(r)_"receiver"$ während der Laufzeit
+
+$ tau approx frac(|bold(r)_"sat" - bold(r)_"receiver"|, c) $
+
+Bewegt er sich auf den Satelliten zu, wird der Weg kürzer. Die Wegänderung ist
+
+$ -frac(bold(v) dot (bold(r)_"sat" - bold(r)_"receiver"), c) $
+
+Geteilt durch $c$ ergibt das die Laufzeitänderung. Wegen $bold(v) dot bold(r)_"receiver" = 0$ folgt
+
+$ Delta t_"Sagnac" = -frac((bold(Omega) times bold(r)_"receiver") dot bold(r)_"sat", c^2) $
+
+Das ist der obige Ausdruck. Für die geozentrischen Vektoren bedeutet dies das Gleiche wie
+
+$ Delta t_"Sagnac" = frac(Omega, c^2) (x_"sat" y_"receiver" - y_"sat" x_"receiver") $
+
+Der Betrag ist höchstens
+
+$ |Delta t_"Sagnac"| <= frac(Omega rho_"sat" rho_"receiver", c^2) $
+
+wobei $rho$ der Abstand von der Erdachse ist. Für GPS sind das etwa $137$ ns für einen Empfänger am Äquator und etwa $83$ ns für Bremen im Modell.
 
 #line(length: 100%)
 
@@ -209,7 +249,7 @@ Für die geozentrischen Vektoren bedeutet dies das Gleiche wie $Delta t_"Sagnac"
   [Allgemeine Relativität], [Linear], [+45.7 μs/Tag],
   [Nettokorrektur (GPS)], [Linear], [+38.5 μs/Tag],
   [Exzentrizität (GPS)], [Begrenzt], [±34 ns],
-  [Sagnac-Fenster], [Begrenzt], [±100–150 ns],
+  [Sagnac-Fenster], [Begrenzt], [bis ±137 ns (Bremen: ±83 ns)],
 )
 
 #line(length: 100%)
@@ -217,6 +257,5 @@ Für die geozentrischen Vektoren bedeutet dies das Gleiche wie $Delta t_"Sagnac"
 
 = Referenzen
 
-+ Ashby, Neil. "Relativity in the Global Positioning System." *Living Reviews in Relativity* 6, no. 1 (2003).
-+ GPS.gov Technical Specifications.
-+ International GNSS Service (IGS) MGEX. "BRD400DLR: Merged Multi-GNSS Broadcast Ephemeris Product." https://igs.org/mgex/mgex-product-descriptions/
++ Ashby, Neil. "Relativity in the Global Positioning System." Living Reviews in Relativity 6, no. 1 (2003).
++ Space Systems Command (SSC). IS-GPS-200N: NAVSTAR GPS Space Segment/Navigation User Segment Interfaces. https://www.gps.gov/technical/icwg/IS-GPS-200N.pdf
