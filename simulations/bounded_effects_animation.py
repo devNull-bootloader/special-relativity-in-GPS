@@ -89,7 +89,6 @@ for frame in range(FRAMES):
         bounded_total = ecc_corr + sagnac_corr
 
         # Position error from bounded effects
-        # 1 ns ~ 0.3 meters ~ 0.0003 km
         position_error_km = bounded_total * 0.0003
 
         sat_positions.append({
