@@ -17,12 +17,12 @@ time_step = 1
 time_hours = np.arange(frames) * time_step
 
 # Position traces
-corrected_distance = np.zeros(frames)  # Blue trace: stays at origin (with tiny jitter)
-uncorrected_distance = position_error_per_day_km / 24 * time_hours  # Red trace: linear drift
+corrected_distance = np.zeros(frames)  # origin
+uncorrected_distance = position_error_per_day_km / 24 * time_hours  # linear drift
 
 # Random jitter
 np.random.seed(42)
-corrected_distance += np.random.normal(0, 0.001, frames)  # ±1 meter jitter
+corrected_distance += np.random.normal(0, 0.001, frames)  # jitter
 
 # Figure and axis
 fig, ax = plt.subplots(figsize=(12, 8))
