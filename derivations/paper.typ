@@ -26,15 +26,13 @@ Für die Vorgehensweise und Visualisierung habe ich verschiedene Methoden verwen
 - numerische Datenananalyse und Komputationen von öffentliche Daten zu GNSS-Systemen
 
 #v(2em)
-= Wahre Anomalie aus exzentrischer Anomalie
+= Ideenfindung
+#v(0.5em)
+Das Projekt wurde in der "Jugend-Forscht-AG" am Kippenberg-Gymnasium konzipiert. Auf der Suche nach physikorientierte Projektideen stieß ich auf ein Interview mit dem bekanntem Physiker Neil deGrasse Tyson im Jahr 2012, wo er seine Vorliebe zu Apple-Geräten erklärte.
 
-Sobald wir die exzentrische Anomalie $E$ haben, wandelt man zur *wahren Anomalie* $nu$ um. Das ist der eigentliche Winkel vom Perigäum (nächster Punkt) der Umlaufbahn zum Satelliten:
+Einer seiner Gründe war, dass iPhones die empfangene GPS-Zeit mit der Addition von Schaltsekunden korrigierte, wobei Android-Smartphones damals dies nicht taten.
 
-$ cos(nu) = frac(cos(E) - e, 1 - e cos(E)) $
-
-$ sin(nu) = frac(sqrt(1 - e^2) sin(E), 1 - e cos(E)) $
-
-Wir verwenden beide Ausdrücke und `arctan2(sin, cos)`, um den Winkel im korrekten Quadranten zu erhalten.
+Daher habe ich die Frage gestellt, woher diese Schaltsekunden kommen und was für eine Wirkung sie haben. So bin ich auf die aktuelle Forschungsfrage für das Projekt gekommen.
 
 == Orbitalradius bei wahrer Anomalie
 
