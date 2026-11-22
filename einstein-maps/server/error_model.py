@@ -1,7 +1,7 @@
 import sys, os, csv
 import numpy as np
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "simulations"))
-from simulations.bounded_utilities import (kepler_solver, true_anomaly, satellite_distance,
+from bounded_utilities import (kepler_solver, true_anomaly, satellite_distance,
     eccentricity_correction_ns, sagnac_correction_ns, latlon_to_ecef,
     satellite_position_ecef, GM, c, R_EARTH, OMEGA_EARTH)
 
@@ -46,13 +46,32 @@ def bounded_ns(system, sim_s):
     return ecc_ns, sagnac_ns
 
 def error_vector(system, mode, sim_s):
-    """TODO: mode in {"full", "secular_only", "none"}.
-    full -> 0 | secular_only -> bounded only | none -> secular + bounded.
-    bounded_m = (ecc_ns + sagnac_ns) * 0.299792458
-    Return dict with range_m, east_m, north_m, ecc_ns, sagnac_ns, secular_m.
-    east = range*sin(bearing), north = range*cos(bearing)"""
+    secular_m = secular_range_m(system, sim_s)
+    ecc_ns, sagnac_ns = bounded_ns(system, sim_s)
+    bounded_m = (ecc_ns + sagnac_ns) * NS_TO_M
+    if mode == "full":
+        range_m = 0.0
+    elif mode == "secular_only":
+        range_m = bounded_m
+    elif mode == "none":
+        range_m = secular_m + bounded_m
+    else:
+        raise ValueError("Enter 'full', 'secular_only' or 'none'.")
+
+    b = np.radians(BEARING_DEG)
+    return {
+        "range_m": range_m,
+        "east_m": range_m * np.sin(b),
+        "north_m": range_m * np.cos(b),
+        "ecc_ns": ecc_ns,
+        "sagnac_ns": sagnac_ns,
+        "secular_m": secular_m
+    }
 
 if __name__ == "__main__":
-    # TODO: sanity checks against paper:
-    # GPS secular at 86400 s ≈ 11540 m; max |ecc| ≈ 34 ns; max |sagnac| ≈ 83 ns
-    pass
+    print(secular_range_m("GPS", 86400))
+    for name in SYSTEMS:
+        ts = range(0, 86401, 60)
+        ecc = max(abs(bounded_ns(name, t)[0]) for t in ts)
+        sag = max(abs(bounded_ns(name, t)[1]) for t in ts)
+        print(f"{name:8s} max|ecc| = {ecc:6.2f} ns   max|sagnac| = {sag:6.2f} ns")
