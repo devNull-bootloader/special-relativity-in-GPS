@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Einstein-Maps</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside>
+        <h1>Einstein-Maps</h1>
+        <p class="sub">Navigation ohne Relativitätskorrektur</p>
+
+        <form id="search">
+            <input id="dest" type="text" placeholder="Ziel eingeben" autocomplete="off"
+            <button type="submit">Route</button>
+        </form>
+        <p id="status"></p>
+
+        <h2>Satellitensystem</h2>
+        <div class="seg" id="systems">
+            <button data-v="GPS" class="on">GPS</button>
+            <button data-v="Galileo">Galileo</button>
+            <button data-v="GLONASS">GLONASS</button>
+            <button data-v="BeiDou">BeiDou</button>
+        </div>
+
+        <h2>Korrektur</h2>
+        <div class="seg" id="modes">
+            <button data-v="full">Voll</button>
+            <button data-v="secular_only">Nur säkular</button>
+            <button data-v="none" class="on">Keine</button>
+        </div>
+
+        <h2>Fehler</h2>
+        <dl>
+            <dt>Simulierte Zeit</dt><dd id="h-time">–</dd>
+            <dt>Säkulare Drift</dt><dd id="h-sec">–</dd>
+            <dt>Exzentrizität</dt><dd id="h-ecc">–</dd>
+            <dt>Sagnac</dt><dd id="h-sag">–</dd>
+            <dt class="total">Positionsfehler</dt><dd class="total" id="h-tot">–</dd>
+        </dl>
+
+        <div class="legend">
+            <span><i class="k true"></i>Wahre Position</span>
+            <span><i class="k bel"></i>Angenommene Position</span>
+            <span><i class="k line-g"></i>Richtige Route</span>
+            <span><i class="k line-r"></i>Angezeigte Route</span>
+        </div>
+
+        <label class="exag"><input type="checkbox" id="exag"> Fehler ×50 darstellen (nicht maßstäblich)</label>
+        <button id="reset" class="plain">Simulation zurücksetzen</button>
+
+        <p class="note">1 s = 10 min Simulationszeit. Vereinfacht: Entfernungsfehler eines
+              Satelliten, auf eine Position abgebildet; Richtung fest 45°.</p>
+    </aside>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
