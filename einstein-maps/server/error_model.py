@@ -34,10 +34,16 @@ def secular_range_m(system, sim_s):
     return c * net * 1e-6 * (sim_s / 86400)
 
 def bounded_ns(system, sim_s):
-    """TODO: return (ecc_ns, sagnac_ns). Copy the loop body of bounded_effects_timeseries.py:
-    M = 2*pi*sim_s/period % 2*pi -> kepler_solver -> true_anomaly -> r
-    -> eccentricity_correction_ns -> earth_angle = 2*pi*sim_s/86400
-    -> satellite_position_ecef(r, nu - earth_angle) -> sagnac_correction_ns"""
+    s = SYSTEMS[system]
+    M = (2 * np.pi * sim_s / s["period_s"]) % (2 * np.pi)
+    E = kepler_solver(M, s["e"])
+    nu = true_anomaly(E, s["e"])
+    r = satellite_distance(s["a"], s["e"], nu)
+    ecc_ns = eccentricity_correction_ns(s["a"], s["e"], E, s["period_s"])
+    earth_angle = 2 * np.pi * sim_s / 86400
+    r_sat = satellite_position_ecef(r, nu - earth_angle)
+    sagnac_ns = sagnac_correction_ns(r_sat, ground_ecef)
+    return ecc_ns, sagnac_ns
 
 def error_vector(system, mode, sim_s):
     """TODO: mode in {"full", "secular_only", "none"}.
