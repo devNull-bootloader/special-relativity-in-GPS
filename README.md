@@ -1,6 +1,6 @@
 # Special Relativity in GPS
 
-A compact project exploring why GPS satellite clocks require relativistic corrections, and how those corrections emerge from first-principles physics.
+A project exploring why GPS satellite clocks require relativistic corrections, and how those corrections emerge from first-principles physics.
 
 ## Overview
 

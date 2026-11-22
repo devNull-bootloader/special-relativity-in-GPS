@@ -25,10 +25,13 @@ def load_systems():
             a = R_EARTH + alt_km * 1000
             period_s = 2 * np.pi * np.sqrt(a**3 / GM)
             systems[name] = {"alt_km": alt_km, "e": ECC[name], "net_us_per_day": float(row["Net_correction_us_per_day"]), "a": a, "period_s": period_s}
-            return systems
+    return systems
+
+SYSTEMS = load_systems()
 
 def secular_range_m(system, sim_s):
-    """TODO: c * net_us_per_day * 1e-6 * (sim_s / 86400)"""
+    net = SYSTEMS[system]["net_us_per_day"]
+    return c * net * 1e-6 * (sim_s / 86400)
 
 def bounded_ns(system, sim_s):
     """TODO: return (ecc_ns, sagnac_ns). Copy the loop body of bounded_effects_timeseries.py:
