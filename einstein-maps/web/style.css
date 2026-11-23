@@ -1,8 +1,8 @@
 :root {
-  --paper: #f3f0e8;
+  --paper: #c1daf7;
   --ink: #1c1c1c;
   --mute: #6f6c64;
-  --rule: #d6d1c4;
+  --rule: #4a9af7;
   --red: #c2331f;
   --grey: #8d8a82;
 }
@@ -50,7 +50,7 @@ input[type="text"] {
   padding: 10px 11px;
   font: inherit;
   color: var(--ink);
-  background: #fff;
+  background: #e8f2fc;
   border: 1px solid var(--rule);
   border-radius: 3px;
 }
@@ -59,7 +59,7 @@ input[type="text"]:focus { outline: 2px solid var(--ink); outline-offset: -1px; 
 button {
   font: inherit;
   color: var(--ink);
-  background: #fff;
+  background: #e8f2fc;
   border: 1px solid var(--rule);
   border-radius: 3px;
   padding: 9px 13px;
