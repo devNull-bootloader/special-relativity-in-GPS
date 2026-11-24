@@ -78,12 +78,14 @@ async function getRoute(from, to) {
 }
 
 async function drawRoutes({ both }) {
-  if (!state.dest || !state.believed || state.routing) return;
+  if (both) state.needTrue = true;
+  if (!state.dest||!state.believed||state.routing) return;
   state.routing = true;
   const from = state.believed;
   try {
-    if (both) {
+    if (state.needTrue) {
       routeTrue.setLatLngs(await getRoute(truePos, state.dest));
+      state.needTrue = false;
     }
     routeShown.setLatLngs(await getRoute(from, state.dest));
     state.routedFrom = from;
