@@ -27,6 +27,8 @@ I also look at Galileo, GLONASS and BeiDou, and at the smaller effects that don'
 │   ├── derivations.typ      full derivations (SR, GR, null altitude, bounded effects)
 │   ├── appendices.typ       orbital mechanics, constellation data, simulation methods
 │   ├── paper.typ            the written project report
+│   ├── appendices.pdf
+│   ├── paper.pdf
 │   └── derivations.pdf
 ├── outputs/                 generated text and animations
 ├── plots/                   generated figures
@@ -75,7 +77,7 @@ A small navigation app for showing the problem to people. You type in a destinat
 - Nur säkular: only the small bounded effects are left (tens of meters).
 - Keine: no correction at all, and the error climbs towards 11.5 km.
 
-Start it with:
+Start locally it with:
 
 ```bash
 python einstein-maps/server/app.py
@@ -83,12 +85,16 @@ python einstein-maps/server/app.py
 
 Then open `http://localhost:5000`.
 
+Or go to the main site for this whole repo [here](https://special-relativity-in-gps.onrender.com/).
+
 Some notes on what is real and what is simplified:
 
 - The physics comes straight from the simulation code in this repo. The road network, geocoding and routing come from OpenStreetMap (Nominatim and OSRM).
 - Time is sped up so that 1 second is 10 minutes. Otherwise nobody would see an error that grows over a day.
 - The real error is a range error for one satellite. The app turns it into a position offset in a fixed direction (45°). A real receiver would combine several satellites and absorb part of this in its own clock.
 - The eccentricities are model values, not taken from broadcast ephemerides. Real satellites differ from each other.
+
+Also, the app uses a single, unified clock for all users. You may say it's a bug, although I'd call it a fun quirk ;-)
 
 ## Checking my numbers
 
