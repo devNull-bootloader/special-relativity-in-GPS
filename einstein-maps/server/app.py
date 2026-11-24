@@ -8,7 +8,7 @@ MODES = ("full", "secular_only", "none")
 
 @app.route("/")
 def index():
-    return send_from_directory(app.static_folder, "index.html")
+    return send_from_directory(app.static_folder, "index.html") # type: ignore
 
 @app.route("/api/error")
 def api_error():
